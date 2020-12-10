@@ -11,10 +11,19 @@ export function isExternal(path) {
 }
 
 /**
+ * @description 验证用户账号的格式
  * @param {string} str
  * @returns {Boolean}
  */
 export function validUsername(str) {
-  const valid_map = ['admin', 'editor']
-  return valid_map.indexOf(str.trim()) >= 0
+  return /[a-zA-Z][\w]{1,5}/.test(str)
+}
+
+/**
+ * @description 验证密码格式
+ * @param {string} str
+ * @returns {Boolean}
+ */
+export function validPassword(str) {
+  return /[a-zA-Z][\w\.\?!]{5,15}/.test(str)
 }
