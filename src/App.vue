@@ -1,5 +1,5 @@
 <template>
-  <div id="app" @click.capture="capture;">
+  <div id="app" @click.capture="'capture';">
     <router-view />
   </div>
 </template>
