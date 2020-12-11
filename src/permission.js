@@ -2,11 +2,10 @@ import router from './router'
 import store from './store'
 import { Message } from 'element-ui'
 import NProgress from 'nprogress' // 进度条
-import 'nprogress/nprogress.css' // progress bar style
-// import { getToken } from '@/utils/auth' // get token from cookie
+import 'nprogress/nprogress.css'
 import getPageTitle from '@/utils/get-page-title'
 
-NProgress.configure({ showSpinner: false }) // NProgress Configuration
+NProgress.configure({ showSpinner: false })
 
 const whiteList = ['/login', '/404'] // 白名单
 
@@ -39,7 +38,11 @@ router.beforeEach(async(to, from, next) => {
         } catch (error) {
           // 清除token
           await store.dispatch('user/resetToken')
-          Message.error(error || 'Has Error')
+          Message({
+            message: `获取用户信息失败: ${error}`,
+            type: 'error',
+            offset: 240
+          })
 
           // 重定向到登录页面，并加上请求字符串记录用户是从哪个页面跳转到登录页的方便登录后跳转到对应的页面
           next(`/login?redirect=${to.path}`)
