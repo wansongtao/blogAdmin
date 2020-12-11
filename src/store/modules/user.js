@@ -1,7 +1,7 @@
 import {
   login,
   logout,
-  getInfo
+  getUserInfo
 } from '@/api/user'
 import {
   getToken,
@@ -53,7 +53,10 @@ const actions = {
         userAccount: userAccount.trim(),
         userPassword: userPassword.trim()
       }).then(data => {
+        // 调用mutations里的SET_TOKEN方法将token存入state中
         commit('SET_TOKEN', data.token)
+
+        // 将token存入cookie中
         setToken(data.token)
         resolve()
       }).catch(error => {
@@ -68,11 +71,7 @@ const actions = {
     state
   }) {
     return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
-        const {
-          data
-        } = response
-
+      getUserInfo(state.token).then(data => {
         if (!data) {
           return reject('Verification failed, please Login again.')
         }
@@ -82,6 +81,7 @@ const actions = {
           avatar
         } = data
 
+        // 修改state里的name和avatar
         commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)
         resolve(data)
@@ -108,13 +108,13 @@ const actions = {
     })
   },
 
-  // remove token
+  // 删除token
   resetToken({
     commit
   }) {
     return new Promise(resolve => {
-      removeToken() // must remove  token  first
-      commit('RESET_STATE')
+      removeToken() // 删除cookie
+      commit('RESET_STATE') // 调用mutations里的REST_STATE方法重置state对象
       resolve()
     })
   }
