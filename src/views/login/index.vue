@@ -23,7 +23,6 @@
           name="userAccount"
           type="text"
           tabindex="1"
-          auto-complete="on"
         />
       </el-form-item>
 
@@ -134,15 +133,13 @@ export default {
           this.$store
             .dispatch('user/login', this.loginForm)
             .then(() => {
+              // 跳转到上次退出时的页面，没有则进入首页
               this.$router.push({ path: this.redirect || '/' })
               this.loading = false
             })
             .catch(() => {
               this.loading = false
             })
-        } else {
-          console.log('error submit!!')
-          return false
         }
       })
     }
@@ -178,10 +175,10 @@ $cursor: #fff;
       height: 47px;
       caret-color: $cursor;
 
-      &:-webkit-autofill {
-        box-shadow: 0 0 0px 1000px $bg inset !important;
-        -webkit-text-fill-color: $cursor !important;
-      }
+      // &:-webkit-autofill {
+      //   box-shadow: 0 0 0px 1000px rgb(245, 243, 243) insert !important;
+      //   -webkit-text-fill-color: $cursor !important;
+      // }
     }
   }
 
