@@ -8,11 +8,10 @@ export function login(data) {
   })
 }
 
-export function getUserInfo(token) {
+export function getUserInfo() {
   return request({
     url: '/admin/getuserinfo',
-    method: 'get',
-    params: { token }
+    method: 'get'
   })
 }
 
