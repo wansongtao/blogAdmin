@@ -79,7 +79,7 @@ const actions = {
 
         // 修改state里的name和avatar
         commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
+        commit('SET_AVATAR', process.env.VUE_APP_BASE_API + avatar)
         resolve(data)
       }).catch(error => {
         reject(error)
