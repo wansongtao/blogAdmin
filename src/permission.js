@@ -28,17 +28,20 @@ router.beforeEach(async(to, from, next) => {
     } else {
       const hasGetUserInfo = store.getters.name
       if (hasGetUserInfo) {
+        // 如果有用户名，则直接放行
         next()
       } else {
         try {
-          // get user info
+          // 获取用户信息
           await store.dispatch('user/getInfo')
 
           next()
         } catch (error) {
-          // remove token and go to login page to re-login
+          // 清除token
           await store.dispatch('user/resetToken')
           Message.error(error || 'Has Error')
+
+          // 重定向到登录页面，并加上请求字符串记录用户是从哪个页面跳转到登录页的方便登录后跳转到对应的页面
           next(`/login?redirect=${to.path}`)
         }
       }
