@@ -12,32 +12,32 @@
         <h3 class="title">个人博客后台管理系统</h3>
       </div>
 
-      <el-form-item prop="username">
+      <el-form-item prop="userAccount">
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
         <el-input
-          ref="username"
-          v-model="loginForm.username"
+          ref="userAccount"
+          v-model="loginForm.userAccount"
           placeholder="账号"
-          name="username"
+          name="userAccount"
           type="text"
           tabindex="1"
           auto-complete="on"
         />
       </el-form-item>
 
-      <el-form-item prop="password">
+      <el-form-item prop="userPassword">
         <span class="svg-container">
           <svg-icon icon-class="password" />
         </span>
         <el-input
           :key="passwordType"
-          ref="password"
-          v-model="loginForm.password"
+          ref="userPassword"
+          v-model="loginForm.userPassword"
           :type="passwordType"
           placeholder="密码"
-          name="password"
+          name="userPassword"
           tabindex="2"
           auto-complete="on"
           @keyup.enter.native="handleLogin"
@@ -85,16 +85,16 @@ export default {
     }
     return {
       loginForm: {
-        username: '',
-        password: ''
+        userAccount: '',
+        userPassword: ''
       },
       loginRules: {
-        username: [
+        userAccount: [
           { required: true, trigger: 'blur', message: '账号不能为空' },
           { trigger: 'blur', min: 2, max: 6, message: '账号长度2-6位' },
           { trigger: 'blur', validator: validateUsername }
         ],
-        password: [
+        userPassword: [
           { required: true, trigger: 'blur', message: '密码不能为空' },
           { trigger: 'blur', min: 6, max: 16, message: '密码长度6-16位' },
           { trigger: 'blur', validator: validatePassword }
@@ -121,13 +121,16 @@ export default {
         this.passwordType = 'password'
       }
       this.$nextTick(() => {
-        this.$refs.password.focus()
+        this.$refs.userPassword.focus()
       })
     },
     handleLogin() {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
+          // 开启登录加载
           this.loading = true
+
+          // 调用vuex里user模块里的异步方法（action里的login）
           this.$store
             .dispatch('user/login', this.loginForm)
             .then(() => {
