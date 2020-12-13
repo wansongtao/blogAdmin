@@ -67,8 +67,7 @@ const actions = {
 
   // get user info
   getInfo({
-    commit,
-    state
+    commit
   }) {
     return new Promise((resolve, reject) => {
       getUserInfo().then(data => {
@@ -89,11 +88,10 @@ const actions = {
 
   // user logout
   logout({
-    commit,
-    state
+    commit
   }) {
     return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
+      logout().then(() => {
         removeToken() // must remove  token  first
         resetRouter()
         commit('RESET_STATE')
