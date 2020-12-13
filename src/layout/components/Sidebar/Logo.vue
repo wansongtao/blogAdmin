@@ -1,12 +1,14 @@
 <template>
   <div class="sidebar-logo-container" :class="{'collapse':collapse}">
     <transition name="sidebarLogoFade">
+      <!-- 缩小后的logo -->
       <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/">
-        <img v-if="logo" :src="logo" class="sidebar-logo">
-        <h1 v-else class="sidebar-title">{{ title }} </h1>
+        <img src="../../../assets/common/you1.jpeg" class="sidebar-logo">
       </router-link>
+
+      <!-- 扩大后的logo -->
       <router-link v-else key="expand" class="sidebar-logo-link" to="/">
-        <img v-if="logo" :src="logo" class="sidebar-logo">
+        <img src="~@/assets/common/hy5.jpg" class="sidebar-logo-expand">
         <h1 class="sidebar-title">{{ title }} </h1>
       </router-link>
     </transition>
@@ -24,8 +26,7 @@ export default {
   },
   data() {
     return {
-      title: 'Vue Admin Template',
-      logo: 'https://wpimg.wallstcn.com/69a1c46c-eb1c-4b46-8bd4-e9e686ef5251.png'
+      title: '松涛博客'
     }
   }
 }
@@ -46,7 +47,7 @@ export default {
   width: 100%;
   height: 50px;
   line-height: 50px;
-  background: #2b2f3a;
+  background: rgba(255, 255, 255, 0);
   text-align: center;
   overflow: hidden;
 
@@ -59,16 +60,24 @@ export default {
       height: 32px;
       vertical-align: middle;
       margin-right: 12px;
+      border-radius: 8px;
+    }
+
+    & .sidebar-logo-expand {
+      width: 80px;
+      height: 32px;
+      vertical-align: middle;
+      margin-right: 12px;
+      border-radius: 10px;
     }
 
     & .sidebar-title {
       display: inline-block;
       margin: 0;
-      color: #fff;
+      color: #000;
       font-weight: 600;
       line-height: 50px;
-      font-size: 14px;
-      font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
+      font-size: 18px;
       vertical-align: middle;
     }
   }
