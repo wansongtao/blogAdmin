@@ -8,7 +8,7 @@
 
       <!-- 扩大后的logo -->
       <router-link v-else key="expand" class="sidebar-logo-link" to="/">
-        <!-- <img src="~@/assets/common/hy5.jpg" class="sidebar-logo-expand"> -->
+        <img src="~@/assets/common/you1.jpeg" class="sidebar-logo">
         <h1 class="sidebar-title">{{ title }} </h1>
       </router-link>
     </transition>
@@ -61,14 +61,6 @@ export default {
       vertical-align: middle;
       margin-right: 12px;
       border-radius: 8px;
-    }
-
-    & .sidebar-logo-expand {
-      width: 80px;
-      height: 32px;
-      vertical-align: middle;
-      margin-right: 12px;
-      border-radius: 10px;
     }
 
     & .sidebar-title {
