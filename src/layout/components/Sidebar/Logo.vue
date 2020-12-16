@@ -8,7 +8,7 @@
 
       <!-- 扩大后的logo -->
       <router-link v-else key="expand" class="sidebar-logo-link" to="/">
-        <img src="~@/assets/common/hy5.jpg" class="sidebar-logo-expand">
+        <!-- <img src="~@/assets/common/hy5.jpg" class="sidebar-logo-expand"> -->
         <h1 class="sidebar-title">{{ title }} </h1>
       </router-link>
     </transition>
@@ -26,7 +26,7 @@ export default {
   },
   data() {
     return {
-      title: '松涛博客'
+      title: '无尽的幻想'
     }
   }
 }
