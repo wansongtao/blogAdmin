@@ -36,7 +36,7 @@ service.interceptors.response.use(
       Message({
         message: message || '用户身份过期，请重新登录',
         type: 'error',
-        offset: 240
+        duration: 2 * 1000
       })
 
       return Promise.reject(new Error(message || '服务器错误'))
@@ -45,7 +45,7 @@ service.interceptors.response.use(
     Message({
       message: message || '操作失败',
       type: 'error',
-      offset: 240
+      duration: 2 * 1000
     })
 
     return Promise.reject(new Error(message || '服务器错误'))
@@ -55,7 +55,7 @@ service.interceptors.response.use(
     Message({
       message: error.message,
       type: 'error',
-      duration: 3 * 1000
+      duration: 2 * 1000
     })
     return Promise.reject(error)
   }
