@@ -12,7 +12,7 @@
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
           >
-            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+            <img v-if="form.avatar" v-imgErr="defaultImg" :src="form.avatar" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon" />
           </el-upload>
         </el-form-item>
@@ -137,6 +137,7 @@ export default {
     }
     return {
       form: {
+        avatar: this.$store.getters.avatar,
         userName: this.$store.getters.name,
         qqAcc: '',
         weChat: '',
@@ -222,7 +223,7 @@ export default {
         ]
       },
       loading: false,
-      imageUrl: this.$store.getters.avatar
+      defaultImg: require('@/assets/common/you1.jpeg')
     }
   },
   methods: {
@@ -234,10 +235,15 @@ export default {
       })
     },
     handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw)
+      // this.imageUrl = URL.createObjectURL(file.raw)
+      if (res.success) {
+        this.form.avatar = this.$store.getters.baseURL + res.data.imgUrl
+      } else {
+        this.$message.error(res.message || '头像上传失败')
+      }
     },
     beforeAvatarUpload(file) {
-      const isImage = file.type === 'image'
+      const isImage = file.type.search(/^image/i) !== -1
       const isLtKb = file.size / 1024 / 1024 < 0.5
 
       if (!isImage) {
