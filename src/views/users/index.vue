@@ -2,6 +2,20 @@
   <div class="app-container">
     <el-card :body-style="{ height: '820px' }">
       <el-form ref="form" :model="form" :rules="editRules" label-width="100px">
+        <el-form-item label="头像">
+          <el-upload
+            class="avatar-uploader"
+            :action="$store.getters.baseURL + '/admin/upload'"
+            :headers="{Authorization: 'Bearer ' + $store.getters.token}"
+            :multiple="false"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload"
+          >
+            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon" />
+          </el-upload>
+        </el-form-item>
         <el-form-item label="用户昵称" prop="userName">
           <el-input
             v-model="form.userName"
@@ -37,13 +51,13 @@
             style="width: 50%"
           />
         </el-form-item>
-        <el-form-item label="用户性别">
+        <el-form-item label="用户性别" prop="userGender">
           <el-select v-model="form.userGender" placeholder="请选择性别">
             <el-option label="男" value="1" />
             <el-option label="女" value="0" />
           </el-select>
         </el-form-item>
-        <el-form-item label="出生日期">
+        <el-form-item label="出生日期" prop="birthday">
           <el-col :span="5">
             <el-date-picker
               v-model="form.birthday"
@@ -55,13 +69,14 @@
             />
           </el-col>
         </el-form-item>
-        <el-form-item label="兴趣爱好">
+        <el-form-item label="兴趣爱好" prop="hobby">
           <el-checkbox-group v-model="form.hobby">
             <el-checkbox label="阅读" name="type" />
             <el-checkbox label="旅游" name="type" />
             <el-checkbox label="游戏" name="type" />
             <el-checkbox label="电影" name="type" />
             <el-checkbox label="音乐" name="type" />
+            <el-checkbox label="编程" name="type" />
           </el-checkbox-group>
         </el-form-item>
         <el-form-item label="个人简介" prop="personalDes">
@@ -72,7 +87,11 @@
           />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">确认修改</el-button>
+          <el-button
+            type="primary"
+            :loading="loading"
+            @click="updateInfo"
+          >确认修改</el-button>
           <el-button>取消</el-button>
         </el-form-item>
       </el-form>
@@ -88,6 +107,7 @@ import {
   validateLifeMotto,
   validatePersonalDes
 } from '@/utils/validate'
+// import { mapGetters } from 'vuex'
 export default {
   data() {
     const validateUserName = (rule, value, callback) => {
@@ -117,7 +137,7 @@ export default {
     }
     return {
       form: {
-        userName: '',
+        userName: this.$store.getters.name,
         qqAcc: '',
         weChat: '',
         email: '',
@@ -171,6 +191,25 @@ export default {
           },
           { trigger: 'blur', validator: validLifeMotto }
         ],
+        userGender: [
+          { required: true, message: '请选择性别', trigger: 'change' }
+        ],
+        birthday: [
+          {
+            type: 'date',
+            required: true,
+            message: '请选择日期',
+            trigger: 'change'
+          }
+        ],
+        hobby: [
+          {
+            type: 'array',
+            required: true,
+            message: '请至少选择一个兴趣爱好',
+            trigger: 'change'
+          }
+        ],
         personalDes: [
           { required: true, message: '请输入您的个人简介', trigger: 'blur' },
           {
@@ -181,14 +220,63 @@ export default {
           },
           { trigger: 'blur', validator: validPersonalDes }
         ]
-      }
+      },
+      loading: false,
+      imageUrl: this.$store.getters.avatar
     }
   },
   methods: {
-    onSubmit() {
-      console.log('submit!')
-      console.log(this.form)
+    updateInfo() {
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          this.loading = true
+        }
+      })
+    },
+    handleAvatarSuccess(res, file) {
+      this.imageUrl = URL.createObjectURL(file.raw)
+    },
+    beforeAvatarUpload(file) {
+      const isImage = file.type === 'image'
+      const isLtKb = file.size / 1024 / 1024 < 0.5
+
+      if (!isImage) {
+        this.$message.error('只能上传图片')
+      }
+      if (!isLtKb) {
+        this.$message.error('上传头像图片大小不能超过 500kb!')
+      }
+      return isImage && isLtKb
     }
   }
 }
 </script>
+
+<style lang="scss" scoped>
+  .avatar-uploader {
+    display: block;
+    width: 60px;
+    height: 60px;
+    border: 1px dashed #908c8c;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
+  }
+  .avatar {
+    width: 60px;
+    height: 60px;
+    display: block;
+  }
+</style>
