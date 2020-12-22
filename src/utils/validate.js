@@ -65,5 +65,5 @@ export function validateLifeMotto(str) {
  * @param {*} str
  */
 export function validatePersonalDes(str) {
-  return /^[\u4e00-\u9fa5]{10,200}$/.test(str)
+  return /^[\u4e00-\u9fa5 \w]{10,300}$/.test(str)
 }
