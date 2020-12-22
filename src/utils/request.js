@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
 import store from '@/store'
+import router from '@/router/index'
 
 // 创建axios实例
 const service = axios.create({
@@ -32,21 +33,26 @@ service.interceptors.response.use(
       return data
     }
 
-    if (code === 500) {
-      Message({
-        message: message || '用户身份过期，请重新登录',
-        type: 'error',
-        duration: 2 * 1000
-      })
+    // if (code === 500) {
+    //   Message({
+    //     message: message || '用户身份过期，请重新登录',
+    //     type: 'error',
+    //     duration: 2 * 1000
+    //   })
 
-      return Promise.reject(new Error(message || '服务器错误'))
-    }
-
+    //   return Promise.reject(new Error(message || '服务器错误'))
+    // }
     Message({
       message: message || '操作失败',
       type: 'error',
       duration: 2 * 1000
     })
+
+    if (code === 500 || code === 501) {
+      setTimeout(() => {
+        router.push('/')
+      }, 2000)
+    }
 
     return Promise.reject(new Error(message || '服务器错误'))
   },

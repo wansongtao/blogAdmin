@@ -12,7 +12,7 @@
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
           >
-            <img v-if="form.avatar" v-imgErr="defaultImg" :src="form.avatar" class="avatar">
+            <img v-if="form.avatar" v-imgErr="defaultImg" :src="$store.getters.baseURL + form.avatar" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon" />
           </el-upload>
         </el-form-item>
@@ -104,9 +104,9 @@ import {
   validateNickName,
   validateQqAcc,
   validateEmail,
-  validateLifeMotto,
-  validatePersonalDes
+  validateLifeMotto
 } from '@/utils/validate'
+import { editUserInfo } from '@/api/user'
 // import { mapGetters } from 'vuex'
 export default {
   data() {
@@ -116,9 +116,9 @@ export default {
         : callback(new Error('请输入1-8位中文字符'))
     }
     const validQqAcc = (rule, value, callback) => {
-      validateQqAcc(value)
+      validateQqAcc(parseInt(value))
         ? callback()
-        : callback(new Error('请输入5 到 12 个数字且不能已零开头'))
+        : callback(new Error('请输入5 到 11 个数字且不能已零开头'))
     }
     const validEmail = (rule, value, callback) => {
       validateEmail(value)
@@ -130,23 +130,19 @@ export default {
         ? callback()
         : callback(new Error('请输入1-50个中文字符'))
     }
-    const validPersonalDes = (rule, value, callback) => {
-      validatePersonalDes(value)
-        ? callback()
-        : callback(new Error('请输入10-200个中文字符'))
-    }
+    const users = JSON.parse(sessionStorage.users)
     return {
       form: {
-        avatar: this.$store.getters.avatar,
-        userName: this.$store.getters.name,
-        qqAcc: '',
-        weChat: '',
-        email: '',
-        lifeMotto: '',
-        userGender: '',
-        birthday: '',
-        hobby: [],
-        personalDes: ''
+        avatar: users.avatar,
+        userName: users.name || '',
+        qqAcc: users.qqAcc || '',
+        weChat: users.weChat || '',
+        email: users.email || '',
+        lifeMotto: users.lifeMotto || '',
+        userGender: users.userGender || '',
+        birthday: users.birthday || '',
+        hobby: users.hobby || [],
+        personalDes: users.personalDes || ''
       },
       editRules: {
         userName: [
@@ -173,7 +169,7 @@ export default {
           {
             min: 5,
             max: 11,
-            message: '长度在 5 到 12 个数字',
+            message: '长度在 5 到 11 个数字',
             trigger: 'blur'
           },
           { trigger: 'blur', validator: validQqAcc }
@@ -195,14 +191,6 @@ export default {
         userGender: [
           { required: true, message: '请选择性别', trigger: 'change' }
         ],
-        birthday: [
-          {
-            type: 'date',
-            required: true,
-            message: '请选择日期',
-            trigger: 'change'
-          }
-        ],
         hobby: [
           {
             type: 'array',
@@ -215,11 +203,10 @@ export default {
           { required: true, message: '请输入您的个人简介', trigger: 'blur' },
           {
             min: 10,
-            max: 200,
-            message: '长度在 10 到 200 个中文字符',
+            max: 300,
+            message: '长度在 10 到 300 个字符',
             trigger: 'blur'
-          },
-          { trigger: 'blur', validator: validPersonalDes }
+          }
         ]
       },
       loading: false,
@@ -231,13 +218,19 @@ export default {
       this.$refs.form.validate((valid) => {
         if (valid) {
           this.loading = true
+
+          editUserInfo(this.form).then(data => {
+            this.$store.dispatch('/user/getInfo')
+            this.loading = false
+            this.$message.success('修改成功')
+          })
         }
       })
     },
     handleAvatarSuccess(res, file) {
       // this.imageUrl = URL.createObjectURL(file.raw)
       if (res.success) {
-        this.form.avatar = this.$store.getters.baseURL + res.data.imgUrl
+        this.form.avatar = res.data.imgUrl
       } else {
         this.$message.error(res.message || '头像上传失败')
       }

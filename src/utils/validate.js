@@ -41,7 +41,7 @@ export function validateNickName(str) {
  * @param {*} str
  */
 export function validateQqAcc(str) {
-  return /^[1-9][0-9]{4, 10}$/.test(str)
+  return /^[1-9][0-9]{4,10}$/.test(str)
 }
 
 /**
@@ -57,13 +57,13 @@ export function validateEmail(str) {
  * @param {*} str
  */
 export function validateLifeMotto(str) {
-  return /^[\u4e00-\u9fa5]{1,50}$/.test(str)
+  return /^[\u4e00-\u9fa5，,。\.]{1,50}$/.test(str)
 }
 
-/**
- * @description 验证个人简介格式
- * @param {*} str
- */
-export function validatePersonalDes(str) {
-  return /^[\u4e00-\u9fa5 \w]{10,300}$/.test(str)
-}
+// /**
+//  * @description 验证个人简介格式
+//  * @param {*} str
+//  */
+// export function validatePersonalDes(str) {
+//   return /^[\u4e00-\u9fa5 \/\.\+()\w]{10,300}$/.test(str)
+// }
