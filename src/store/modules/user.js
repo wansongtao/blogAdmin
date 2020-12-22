@@ -79,6 +79,7 @@ const actions = {
         // 修改state里的name和avatar
         commit('SET_NAME', name)
         commit('SET_AVATAR', process.env.VUE_APP_BASE_API + avatar)
+        sessionStorage.users = JSON.stringify(data)
         resolve(data)
       }).catch(error => {
         reject(error)
@@ -95,6 +96,7 @@ const actions = {
         removeToken() // must remove  token  first
         resetRouter()
         commit('RESET_STATE')
+        sessionStorage.removeItem('users')
         resolve()
       }).catch(error => {
         reject(error)
