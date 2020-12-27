@@ -33,15 +33,6 @@ service.interceptors.response.use(
       return data
     }
 
-    // if (code === 500) {
-    //   Message({
-    //     message: message || '用户身份过期，请重新登录',
-    //     type: 'error',
-    //     duration: 2 * 1000
-    //   })
-
-    //   return Promise.reject(new Error(message || '服务器错误'))
-    // }
     Message({
       message: message || '操作失败',
       type: 'error',
@@ -49,9 +40,10 @@ service.interceptors.response.use(
     })
 
     if (code === 500 || code === 501) {
-      setTimeout(() => {
-        router.push('/')
-      }, 2000)
+      // 清除token后，才能跳转到登录页
+      store.dispatch('user/resetToken').then(() => {
+        router.push('/login')
+      })
     }
 
     return Promise.reject(new Error(message || '服务器错误'))
