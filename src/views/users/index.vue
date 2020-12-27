@@ -107,7 +107,7 @@ import {
   validateLifeMotto
 } from '@/utils/validate'
 import { editUserInfo } from '@/api/user'
-// import { mapGetters } from 'vuex'
+
 export default {
   data() {
     const validateUserName = (rule, value, callback) => {

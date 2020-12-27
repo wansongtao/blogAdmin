@@ -1,12 +1,15 @@
 <template>
   <div class="app-container">
-    文章编辑
+    <vue-editor />
   </div>
 </template>
 
 <script>
+import vueEditor from './components/VueEditor'
 export default {
-
+  components: {
+    vueEditor
+  }
 }
 </script>
 
