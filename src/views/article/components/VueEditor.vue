@@ -14,14 +14,23 @@
     <div class="article-item">
       <span>文章分类：</span>
       <div>
-        <el-checkbox-group
+        <div>
+          <el-radio
+            v-for="item in categories"
+            :key="item.categoryType"
+            v-model="selectCategory"
+            :label="item.categoryId"
+            border
+          >{{ item.categoryType }}</el-radio>
+        </div>
+        <!-- <el-checkbox-group
           v-model="selectCategory"
           size="medium"
         >
           <el-checkbox v-for="item in categories" :key="item.categoryType" :label="item.categoryId">{{
             item.categoryType
           }}</el-checkbox>
-        </el-checkbox-group>
+        </el-checkbox-group> -->
       </div>
     </div>
 
@@ -217,8 +226,8 @@ export default {
   data() {
     return {
       title: '',
-      categories: ['科学', '文学', '杂志', '编程'],
-      selectCategory: [''],
+      categories: [{ categoryId: 101, categoryType: '错了' }],
+      selectCategory: '',
       avatar: '',
       defaultImg: require('@/assets/common/you1.jpeg'),
       content: '',
@@ -246,8 +255,9 @@ export default {
     }
   },
   created() {
-    getCategory().then(data => {
+    getCategory().then((data) => {
       this.categories = data.categories
+      this.selectCategory = this.categories[0].categoryId
     })
   },
   methods: {
@@ -357,9 +367,9 @@ export default {
 }
 
 .btn {
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
 }
 </style>
  <style scoped>
