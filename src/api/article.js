@@ -6,3 +6,11 @@ export function getCategory() {
     method: 'get'
   })
 }
+
+export function addArticle(data) {
+  return request({
+    url: 'admin/addarticle',
+    method: 'post',
+    data
+  })
+}

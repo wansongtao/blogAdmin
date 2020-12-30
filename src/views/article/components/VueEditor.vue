@@ -23,14 +23,6 @@
             border
           >{{ item.categoryType }}</el-radio>
         </div>
-        <!-- <el-checkbox-group
-          v-model="selectCategory"
-          size="medium"
-        >
-          <el-checkbox v-for="item in categories" :key="item.categoryType" :label="item.categoryId">{{
-            item.categoryType
-          }}</el-checkbox>
-        </el-checkbox-group> -->
       </div>
     </div>
 
@@ -38,6 +30,7 @@
       <span>文章封面：</span>
       <div>
         <el-upload
+          :key="'avatar'"
           class="avatar-uploader"
           :action="$store.getters.baseURL + '/admin/upload'"
           :headers="{ Authorization: 'Bearer ' + $store.getters.token }"
@@ -61,6 +54,7 @@
       <span style="height: 30px; line-height: 30px">文章内容：</span>
       <!-- 图片上传组件辅助-->
       <el-upload
+        id="editorimg"
         class="avatar-uploader"
         :action="$store.getters.baseURL + '/admin/upload'"
         :headers="{ Authorization: 'Bearer ' + $store.getters.token }"
@@ -83,7 +77,12 @@
     </div>
 
     <div class="btn">
-      <el-button type="primary" :loading="loading" round>确认</el-button>
+      <el-button
+        type="primary"
+        :loading="loading"
+        round
+        @click="submitArticle"
+      >确认</el-button>
       <el-button type="info" round>取消</el-button>
     </div>
   </el-card>
@@ -94,7 +93,7 @@ import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 
-import { getCategory } from '@/api/article'
+import { getCategory, addArticle } from '@/api/article'
 // 工具栏配置
 const toolbarOptions = [
   ['bold', 'italic', 'underline', 'strike'], // 加粗 斜体 下划线 删除线
@@ -242,7 +241,7 @@ export default {
               image: function(value) {
                 if (value) {
                   // 触发input框选择图片文件
-                  document.querySelector('.avatar-uploader input').click()
+                  document.querySelector('#editorimg input').click()
                 } else {
                   this.quill.format('image', false)
                 }
@@ -281,19 +280,18 @@ export default {
       }
       return isImage && isLtKb
     },
-    onEditorBlur() {
-      // 失去焦点事件
-      console.log(this.content)
-    },
-    onEditorFocus() {
-      // 获得焦点事件
-    },
+    // onEditorBlur() {
+    //   // 失去焦点事件
+    //   console.log(this.content)
+    // },
+    // onEditorFocus() {
+    //   // 获得焦点事件
+    // },
     onEditorChange({ html, text }) {
       this.content = html
       // 内容改变事件
       //   this.$emit('textareaData', this.content)
     },
-
     // 富文本图片上传前
     beforeUpload(file) {
       // 显示loading动画
@@ -340,6 +338,33 @@ export default {
       // loading动画消失
       this.quillUpdateImg = false
       this.$message.error('图片插入失败')
+    },
+    submitArticle() {
+      // 添加文章
+      if (this.articleId === -1) {
+        if (this.title.length === 0 || this.title.length > 50) {
+          this.$message.error('请输入1-50位字符的文章标题')
+          return false
+        } else if (!this.content.length) {
+          this.$message.error('请输入文章内容')
+          return false
+        }
+
+        const data = {
+          articleTitle: this.title,
+          articleImgUrl: this.avatar,
+          articleContent: this.content,
+          categoryId: this.selectCategory
+        }
+
+        addArticle(data).then(() => {
+          this.$message.success('添加成功')
+
+          this.title = ''
+          this.avatar = ''
+          this.content = ''
+        })
+      }
     }
   }
 }
