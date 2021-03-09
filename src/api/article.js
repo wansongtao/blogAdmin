@@ -14,3 +14,10 @@ export function addArticle(data) {
     data
   })
 }
+
+export function getAllArticle() {
+  return request({
+    url: '/admin/getArticleInfo',
+    method: 'get'
+  })
+}

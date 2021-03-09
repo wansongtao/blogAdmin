@@ -83,7 +83,7 @@
         round
         @click="submitArticle"
       >确认</el-button>
-      <el-button type="info" round>取消</el-button>
+      <el-button type="info" round @click="$emit('click')">取消</el-button>
     </div>
   </el-card>
 </template>
@@ -363,6 +363,7 @@ export default {
           this.title = ''
           this.avatar = ''
           this.content = ''
+          this.$emit('click')
         })
       }
     }
