@@ -70,8 +70,6 @@
         v-loading="quillUpdateImg"
         class="editor"
         :options="editorOption"
-        @blur="onEditorBlur($event)"
-        @focus="onEditorFocus($event)"
         @change="onEditorChange($event)"
       />
     </div>
