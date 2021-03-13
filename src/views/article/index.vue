@@ -11,20 +11,24 @@
         <el-table-column fixed align="center" prop="articleId" label="文章编号" />
         <el-table-column fixed align="center" prop="articleTitle" label="文章标题" />
         <el-table-column fixed align="center" prop="ADDACC" label="添加人" />
-        <el-table-column fixed align="center" prop="ADDTIME" label="添加日期" />
+        <el-table-column fixed align="center" prop="ADDTIME" label="添加时间" />
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
-            <el-button size="mini" @click="selectedIndex = scope.$index; isShow.editor = 2;">查看</el-button>
+            <el-button size="mini" @click="getArticleContent(scope.$index)">查看</el-button>
           </template>
         </el-table-column>
       </el-table>
-      <div class="add-btn" @click="isShow.editor = 1">添加文章</div>
+      <div class="add-btn" @click="isShow.editor = 1">写文章</div>
     </el-card>
+
+    <!-- 编辑器，写文章页面 -->
     <Editor v-if="isShow.editor === 1" @click="isShow.editor = 0" />
+
+    <!-- 文章内容页 -->
     <el-card v-if="isShow.editor === 2" :body-style="{ height: '880px' }">
       <div class="article-details">
         <h4>{{ articleData[selectedIndex].articleTitle }}</h4>
-        <div class="content" v-html="articleData[selectedIndex].articleContent" />
+        <div class="content" v-html="articleContent" />
       </div>
       <div class="back-btn" @click="isShow.editor = 0">返回</div>
     </el-card>
@@ -33,7 +37,7 @@
 
 <script>
 import Editor from './components/VueEditor'
-import { getAllArticle } from '@/api/article'
+import { getArticleList, getArticleContent } from '@/api/article'
 
 export default {
   components: {
@@ -42,19 +46,39 @@ export default {
   data() {
     return {
       articleData: [],
-      multipleSelection: [],
+      count: 0,
       isShow: {
         editor: 0 // 0文章列表，1添加文章，2查看文章
       },
-      selectedIndex: -1
+      selectedIndex: -1,
+      articleContent: ''
     }
   },
   created() {
-    getAllArticle().then((data) => {
-      this.articleData = data.articles
+    // 获取文章列表
+    getArticleList({ currentPage: 1, pageSize: 10 }).then((data) => {
+      this.articleData = data.articles.map(item => {
+        return {
+          ...item,
+          ADDTIME: item.ADDTIME.replace(/T|Z/g, ' ').substr(0, 19)
+        }
+      })
     })
   },
-  methods: {}
+  methods: {
+    // 查看文章内容
+    getArticleContent(index) {
+      this.selectedIndex = index
+      this.isShow.editor = 2
+
+      const id = this.articleData[index].articleId
+
+      // 获取文章内容
+      getArticleContent({ id }).then(data => {
+        this.articleContent = data.articleContent
+      })
+    }
+  }
 }
 </script>
 

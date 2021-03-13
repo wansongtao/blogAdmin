@@ -15,9 +15,18 @@ export function addArticle(data) {
   })
 }
 
-export function getAllArticle() {
+export function getArticleList(params) {
   return request({
-    url: '/admin/getArticleInfo',
-    method: 'get'
+    url: '/admin/getArticleList',
+    method: 'get',
+    params
+  })
+}
+
+export function getArticleContent(params) {
+  return request({
+    url: '/admin/getArticleContent',
+    method: 'get',
+    params
   })
 }
