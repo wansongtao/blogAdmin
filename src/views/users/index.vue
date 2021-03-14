@@ -83,7 +83,7 @@
           <el-input
             v-model="form.personalDes"
             type="textarea"
-            :autosize="{ minRows: 4, maxRows: 6 }"
+            :autosize="{ minRows: 6, maxRows: 8 }"
           />
         </el-form-item>
         <el-form-item>
@@ -277,5 +277,10 @@ export default {
     width: 60px;
     height: 60px;
     display: block;
+  }
+
+  ::v-deep .el-textarea__inner {
+    height: 100px;
+    resize: none;
   }
 </style>
