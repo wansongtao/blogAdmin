@@ -233,6 +233,12 @@ export default {
       line-height: 30px;
       text-indent: 2em;
     }
+
+    ::v-deep h6 {
+      font-size: 18px;
+      line-height: 30px;
+      text-align: center;
+    }
   }
 }
 
