@@ -214,7 +214,7 @@ export default {
   .content {
     overflow: auto;
     padding: 10px;
-    height: 660px;
+    height: 600px;
     border-radius: 5px;
 
     &::-webkit-scrollbar {
