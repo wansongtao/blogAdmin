@@ -40,7 +40,7 @@ export const constantRoutes = [
         path: 'edituser',
         name: 'Edituser',
         component: () => import('@/views/users/index'),
-        meta: { title: '用户信息编辑', icon: 'user' }
+        meta: { title: '用户信息', icon: 'user' }
       }
     ]
   },

@@ -1,18 +1,27 @@
 <template>
   <div class="app-container">
-    <el-card :body-style="{ height: '820px' }">
+    <el-card>
+      <div class="title">
+        <span>编辑用户信息</span>
+        <el-divider content-position="right">人靠衣装，佛靠金装</el-divider>
+      </div>
       <el-form ref="form" :model="form" :rules="editRules" label-width="100px">
         <el-form-item label="头像">
           <el-upload
             class="avatar-uploader"
             :action="$store.getters.baseURL + '/admin/upload'"
-            :headers="{Authorization: 'Bearer ' + $store.getters.token}"
+            :headers="{ Authorization: 'Bearer ' + $store.getters.token }"
             :multiple="false"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
           >
-            <img v-if="form.avatar" v-imgErr="defaultImg" :src="$store.getters.baseURL + form.avatar" class="avatar">
+            <img
+              v-if="form.avatar"
+              v-imgErr="defaultImg"
+              :src="$store.getters.baseURL + form.avatar"
+              class="avatar"
+            >
             <i v-else class="el-icon-plus avatar-uploader-icon" />
           </el-upload>
         </el-form-item>
@@ -21,6 +30,7 @@
             v-model="form.userName"
             placeholder="请输入1-8位中文字符"
             style="width: 30%"
+            clearable
           />
         </el-form-item>
         <el-form-item label="微信" prop="weChat">
@@ -28,6 +38,7 @@
             v-model="form.weChat"
             placeholder="请输入您的微信号"
             style="width: 30%"
+            clearable
           />
         </el-form-item>
         <el-form-item label="qq" prop="qqAcc">
@@ -35,6 +46,7 @@
             v-model="form.qqAcc"
             placeholder="请输入您的qq号"
             style="width: 30%"
+            clearable
           />
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
@@ -42,6 +54,7 @@
             v-model="form.email"
             placeholder="请输入您的邮箱地址"
             style="width: 30%"
+            clearable
           />
         </el-form-item>
         <el-form-item label="人生格言" prop="lifeMotto">
@@ -49,6 +62,7 @@
             v-model="form.lifeMotto"
             placeholder="请输入1-50位中文字符"
             style="width: 50%"
+            clearable
           />
         </el-form-item>
         <el-form-item label="用户性别" prop="userGender">
@@ -83,7 +97,7 @@
           <el-input
             v-model="form.personalDes"
             type="textarea"
-            :autosize="{ minRows: 6, maxRows: 8 }"
+            :autosize="{ minRows: 5, maxRows: 8 }"
           />
         </el-form-item>
         <el-form-item>
@@ -219,8 +233,8 @@ export default {
         if (valid) {
           this.loading = true
 
-          editUserInfo(this.form).then(data => {
-            this.$store.dispatch('/user/getInfo')
+          editUserInfo(this.form).then((data) => {
+            this.$store.dispatch('user/getInfo')
             this.loading = false
             this.$message.success('修改成功')
           })
@@ -252,35 +266,58 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .avatar-uploader {
-    display: block;
-    width: 60px;
-    height: 60px;
-    border: 1px dashed #908c8c;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
+.title {
+  height: 80px;
+
+  span {
+    font-size: 24px;
   }
-  .avatar-uploader .el-upload:hover {
-    border-color: #409EFF;
-  }
-  .avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 60px;
-    height: 60px;
-    line-height: 60px;
-    text-align: center;
-  }
-  .avatar {
-    width: 60px;
-    height: 60px;
-    display: block;
+}
+.avatar-uploader {
+  display: block;
+  width: 60px;
+  height: 60px;
+  border: 1px dashed #908c8c;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 60px;
+  height: 60px;
+  line-height: 60px;
+  text-align: center;
+}
+.avatar {
+  width: 60px;
+  height: 60px;
+  display: block;
+}
+
+::v-deep .el-textarea__inner {
+  height: 100px;
+  resize: none;
+}
+
+::v-deep .el-card {
+  overflow: auto;
+  height: calc(100vh - 90px);
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    background: #eed1ac;
+    border-radius: 4px;
   }
 
-  ::v-deep .el-textarea__inner {
-    height: 100px;
-    resize: none;
+  &::-webkit-scrollbar-thumb {
+    background: #91cfca;
+    border-radius: 4px;
   }
+}
 </style>

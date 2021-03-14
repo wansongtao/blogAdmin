@@ -1,5 +1,9 @@
 <template>
-  <el-card :body-style="{ height: '880px' }">
+  <el-card>
+    <div class="title">
+      <span>写文章</span>
+      <el-divider content-position="right">不积跬步无以至千里</el-divider>
+    </div>
     <div class="article-item">
       <span>文章标题：</span>
       <div>
@@ -81,7 +85,7 @@
         round
         @click="submitArticle"
       >确认</el-button>
-      <el-button type="info" round @click="$emit('click')">取消</el-button>
+      <el-button type="info" round @click="$emit('click', false)">取消</el-button>
     </div>
   </el-card>
 </template>
@@ -361,7 +365,7 @@ export default {
           this.title = ''
           this.avatar = ''
           this.content = ''
-          this.$emit('click')
+          this.$emit('click', true)
         })
       }
     }
@@ -369,6 +373,14 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.title {
+  height: 80px;
+
+  span {
+    font-size: 24px;
+  }
+}
+
 .article-item {
   display: flex;
   align-items: center;
@@ -402,7 +414,7 @@ export default {
 }
 .editor_wrap /deep/ .editor {
   line-height: normal !important;
-  height: 570px;
+  height: 500px;
   margin-bottom: 60px;
 }
 .editor_wrap /deep/ .editor .ql-bubble .ql-editor a {
