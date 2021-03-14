@@ -32,6 +32,11 @@
               size="mini"
               @click="getArticleContent(scope.$index)"
             >查看</el-button>
+            <el-button
+              size="mini"
+              type="danger"
+              @click="delArticleHandler(scope.row.articleId)"
+            >删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -68,7 +73,7 @@
 
 <script>
 import Editor from './components/VueEditor'
-import { getArticleList, getArticleContent } from '@/api/article'
+import { getArticleList, getArticleContent, delArticle } from '@/api/article'
 
 export default {
   components: {
@@ -105,7 +110,7 @@ export default {
             ADDTIME: item.ADDTIME.replace(/T|Z/g, ' ').substr(0, 19)
           }
         })
-        console.log(this.articleData)
+
         this.count = data.count
       })
     },
@@ -139,6 +144,28 @@ export default {
       if (isAdd) {
         this.getList()
       }
+    },
+    // 删除文章
+    delArticleHandler(id) {
+      this.$confirm('此操作将永久删除该文章, 是否删除?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        delArticle({ id }).then(() => {
+          this.getList()
+
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     }
   }
 }

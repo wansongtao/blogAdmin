@@ -30,3 +30,11 @@ export function getArticleContent(params) {
     params
   })
 }
+
+export function delArticle(params) {
+  return request({
+    url: '/admin/delArticle',
+    method: 'get',
+    params
+  })
+}
