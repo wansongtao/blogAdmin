@@ -17,9 +17,9 @@
             :before-upload="beforeAvatarUpload"
           >
             <img
-              v-if="form.avatar"
+              v-if="form.userImgUrl"
               v-imgErr="defaultImg"
-              :src="$store.getters.baseURL + form.avatar"
+              :src="$store.getters.baseURL + form.userImgUrl"
               class="avatar"
             >
             <i v-else class="el-icon-plus avatar-uploader-icon" />
@@ -147,7 +147,7 @@ export default {
     const users = JSON.parse(sessionStorage.users)
     return {
       form: {
-        avatar: users.avatar,
+        userImgUrl: users.avatar,
         userName: users.name || '',
         qqAcc: users.qqAcc || '',
         weChat: users.weChat || '',
@@ -231,20 +231,57 @@ export default {
     updateInfo() {
       this.$refs.form.validate((valid) => {
         if (valid) {
-          this.loading = true
+          const data = JSON.parse(sessionStorage.users)
+          data.userName = data.name
+          data.userImgUrl = data.avatar
 
-          editUserInfo(this.form).then((data) => {
+          // eslint-disable-next-line prefer-const
+          let param = null
+          for (const [key, value] of Object.entries(this.form)) {
+            // 将修改了的值保存到一个对象中
+            if (key !== 'hobby' && value !== data[key]) {
+              if (param === null) { param = {} }
+              param[key] = value
+            }
+          }
+
+          // 如果修改了爱好，则将爱好保存到param对象中
+          if (data.hobby.length !== this.form.hobby.length) {
+            if (param === null) { param = {} }
+            param.hobby = this.form.hobby
+          } else {
+            const hobbyArr = this.form.hobby
+            const temp = hobbyArr.every((item) => {
+              return data.hobby.indexOf(item) > -1
+            })
+
+            if (!temp) {
+              if (param === null) { param = {} }
+              param.hobby = hobbyArr
+            }
+          }
+
+          if (!param) {
+            this.$message({
+              type: 'warning',
+              message: '您没有修改任何信息'
+            })
+            return
+          }
+
+          this.loading = true
+          editUserInfo(param).then(() => {
             this.$store.dispatch('user/getInfo')
             this.loading = false
             this.$message.success('修改成功')
-          })
+          }).catch(() => { this.loading = false })
         }
       })
     },
     handleAvatarSuccess(res, file) {
       // this.imageUrl = URL.createObjectURL(file.raw)
       if (res.success) {
-        this.form.avatar = res.data.imgUrl
+        this.form.userImgUrl = res.data.imgUrl
       } else {
         this.$message.error(res.message || '头像上传失败')
       }
