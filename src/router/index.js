@@ -34,7 +34,6 @@ export const constantRoutes = [
   {
     path: '/users',
     component: Layout,
-    redirect: '/users/edituser',
     children: [
       {
         path: 'edituser',
@@ -48,7 +47,6 @@ export const constantRoutes = [
   {
     path: '/article',
     component: Layout,
-    redirect: '/article/edit',
     children: [
       {
         path: 'editarticle',
@@ -62,7 +60,6 @@ export const constantRoutes = [
   {
     path: '/comment',
     component: Layout,
-    redirect: '/comment/check',
     children: [
       {
         path: 'check',
@@ -76,7 +73,6 @@ export const constantRoutes = [
   {
     path: '/category',
     component: Layout,
-    redirect: '/category',
     children: [{
       path: 'edit',
       component: () => import('@/views/category/index'),
@@ -84,18 +80,6 @@ export const constantRoutes = [
       meta: { title: '栏目管理', icon: 'edit' }
     }]
   },
-
-  // {
-  //   path: 'external-link',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-  //       meta: { title: 'External Link', icon: 'link' }
-  //     }
-  //   ]
-  // },
-
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
