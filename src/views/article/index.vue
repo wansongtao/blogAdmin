@@ -82,8 +82,7 @@ export default {
       getArticleList(this.search).then((data) => {
         this.articleData = data.articles.map(item => {
           return {
-            ...item,
-            ADDTIME: item.ADDTIME.replace(/T|Z/g, ' ').substr(0, 19)
+            ...item
           }
         })
 
