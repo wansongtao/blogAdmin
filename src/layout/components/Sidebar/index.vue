@@ -22,6 +22,7 @@ import { mapGetters } from 'vuex'
 import Logo from './Logo'
 import SidebarItem from './SidebarItem'
 import variables from '@/styles/variables.scss'
+import { constantRoutes } from '@/router/index'
 
 export default {
   components: { SidebarItem, Logo },
@@ -30,7 +31,7 @@ export default {
       'sidebar'
     ]),
     routes() {
-      return this.$router.options.routes
+      return [...constantRoutes, ...this.$store.getters.routes]
     },
     activeMenu() {
       const route = this.$route

@@ -1,4 +1,4 @@
-import router from './router'
+import router, { resetRouter } from './router'
 import store from './store'
 import NProgress from 'nprogress' // 进度条
 import 'nprogress/nprogress.css'
@@ -32,6 +32,12 @@ router.beforeEach(async(to, from, next) => {
         try {
           // 获取用户信息
           await store.dispatch('user/getInfo')
+
+          resetRouter()
+
+          store.getters.routes.forEach((item) => {
+            router.addRoute(item)
+          })
 
           next()
         } catch (error) {

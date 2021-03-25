@@ -8,15 +8,17 @@ import {
   setToken,
   removeToken
 } from '@/utils/auth'
-import {
-  resetRouter
-} from '@/router'
+import { resetRouter } from '@/router'
+import sAdminRoutes from '@/router/superAdmin'
+import adminRoutes from '@/router/admin'
+import commonRoutes from '@/router/common'
 
 const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
-    avatar: ''
+    avatar: '',
+    routes: []
   }
 }
 
@@ -35,6 +37,21 @@ const mutations = {
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
+  },
+  SET_ROUTES: (state, roles) => {
+    let routes = []
+
+    if (roles === 'common') {
+      routes = commonRoutes
+    } else if (roles === 'admin') {
+      routes = adminRoutes
+    } else if (roles === 'sAdmin') {
+      routes = sAdminRoutes
+    } else {
+      routes = [{ path: '*', redirect: '/404', hidden: true }]
+    }
+
+    state.routes = routes
   }
 }
 
@@ -79,6 +96,7 @@ const actions = {
         // 修改state里的name和avatar
         commit('SET_NAME', name)
         commit('SET_AVATAR', process.env.VUE_APP_BASE_API + avatar)
+        commit('SET_ROUTES', 'common')
         sessionStorage.users = JSON.stringify(data)
         resolve(data)
       }).catch(error => {
