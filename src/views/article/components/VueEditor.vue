@@ -30,30 +30,6 @@
       </div>
     </div>
 
-    <div class="article-item">
-      <span>文章封面：</span>
-      <div>
-        <el-upload
-          :key="'avatar'"
-          class="avatar-uploader"
-          :action="$store.getters.baseURL + '/admin/upload'"
-          :headers="{ Authorization: 'Bearer ' + $store.getters.token }"
-          :multiple="false"
-          :show-file-list="false"
-          :on-success="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload"
-        >
-          <img
-            v-if="avatar"
-            v-imgErr="defaultImg"
-            :src="$store.getters.baseURL + avatar"
-            class="avatar"
-          >
-          <i v-else class="el-icon-plus avatar-uploader-icon" />
-        </el-upload>
-      </div>
-    </div>
-
     <div class="editor_wrap">
       <span style="height: 30px; line-height: 30px">文章内容：</span>
       <!-- 图片上传组件辅助-->
@@ -85,7 +61,7 @@
         round
         @click="submitArticle"
       >确认</el-button>
-      <el-button type="info" round @click="$emit('click', false)">取消</el-button>
+      <el-button type="info" round @click="resetContent">取消</el-button>
     </div>
   </el-card>
 </template>
@@ -218,19 +194,11 @@ export default {
   components: {
     quillEditor
   },
-  props: {
-    articleId: {
-      type: Number,
-      default: -1
-    }
-  },
   data() {
     return {
       title: '',
       categories: [{ categoryId: 101, categoryType: '错了' }],
       selectCategory: '',
-      avatar: '',
-      defaultImg: require('@/assets/common/you1.jpeg'),
       content: '',
       quillUpdateImg: false, // 根据图片上传状态来确定是否显示loading动画，刚开始是false,不显示
       editorOption: {
@@ -256,39 +224,13 @@ export default {
     }
   },
   created() {
+    // 获取文章分类列表
     getCategory().then((data) => {
       this.categories = data.categories
       this.selectCategory = this.categories[0].categoryId
     })
   },
   methods: {
-    handleAvatarSuccess(res, file) {
-      // this.imageUrl = URL.createObjectURL(file.raw)
-      if (res.success) {
-        this.avatar = res.data.imgUrl
-      } else {
-        this.$message.error(res.message || '头像上传失败')
-      }
-    },
-    beforeAvatarUpload(file) {
-      const isImage = file.type.search(/^image/i) !== -1
-      const isLtKb = file.size / 1024 / 1024 < 0.5
-
-      if (!isImage) {
-        this.$message.error('只能上传图片')
-      }
-      if (!isLtKb) {
-        this.$message.error('上传头像图片大小不能超过 500kb!')
-      }
-      return isImage && isLtKb
-    },
-    // onEditorBlur() {
-    //   // 失去焦点事件
-    //   console.log(this.content)
-    // },
-    // onEditorFocus() {
-    //   // 获得焦点事件
-    // },
     onEditorChange({ html, text }) {
       this.content = html
       // 内容改变事件
@@ -312,7 +254,6 @@ export default {
       }
       return isImage && isLtKb
     },
-
     uploadSuccess(res) {
       // res为图片服务器返回的数据
       // 获取富文本组件实例
@@ -341,33 +282,34 @@ export default {
       this.quillUpdateImg = false
       this.$message.error('图片插入失败')
     },
+    // 确定添加文章
     submitArticle() {
-      // 添加文章
-      if (this.articleId === -1) {
-        if (this.title.length === 0 || this.title.length > 50) {
-          this.$message.error('请输入1-50位字符的文章标题')
-          return false
-        } else if (!this.content.length) {
-          this.$message.error('请输入文章内容')
-          return false
-        }
-
-        const data = {
-          articleTitle: this.title,
-          articleImgUrl: this.avatar,
-          articleContent: this.content,
-          categoryId: this.selectCategory
-        }
-
-        addArticle(data).then(() => {
-          this.$message.success('添加成功')
-
-          this.title = ''
-          this.avatar = ''
-          this.content = ''
-          this.$emit('click', true)
-        })
+      if (this.title.length === 0 || this.title.length > 50) {
+        this.$message.error('请输入1-50位字符的文章标题')
+        return false
+      } else if (!this.content.length) {
+        this.$message.error('请输入文章内容')
+        return false
       }
+
+      const data = {
+        articleTitle: this.title,
+        articleImgUrl: this.avatar,
+        articleContent: this.content,
+        categoryId: this.selectCategory
+      }
+
+      addArticle(data).then(() => {
+        this.$message.success('添加成功')
+
+        this.resetContent()
+      })
+    },
+    // 取消添加，清空内容
+    resetContent() {
+      this.title = ''
+      this.selectCategory = this.categories[0].categoryId
+      this.content = ''
     }
   }
 }
@@ -414,7 +356,7 @@ export default {
 }
 .editor_wrap /deep/ .editor {
   line-height: normal !important;
-  height: 500px;
+  height: 520px;
   margin-bottom: 60px;
 }
 .editor_wrap /deep/ .editor .ql-bubble .ql-editor a {

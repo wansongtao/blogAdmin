@@ -1,11 +1,10 @@
 <template>
   <div class="app-container">
-    <el-card v-if="isShow.editor === 0">
+    <el-card>
       <div class="title">
         <span>文章列表</span>
         <el-divider content-position="right">大梦一场空</el-divider>
       </div>
-      <div class="add-btn" @click="isShow.editor = 1">写文章</div>
       <el-table
         :data="articleData"
         border
@@ -52,27 +51,17 @@
         />
       </div>
     </el-card>
-
-    <!-- 编辑器，写文章页面 -->
-    <Editor v-if="isShow.editor === 1" @click="backArticleList" />
   </div>
 </template>
 
 <script>
-import Editor from './components/VueEditor'
 import { getArticleList, delArticle } from '@/api/article'
 
 export default {
-  components: {
-    Editor
-  },
   data() {
     return {
       articleData: [],
       count: 0,
-      isShow: {
-        editor: 0 // 0文章列表，1添加文章
-      },
       selectedIndex: -1,
       articleContent: '',
       search: {
@@ -120,14 +109,6 @@ export default {
     handleCurrentChange(currentPage) {
       this.search.currentPage = currentPage
       this.getList()
-    },
-    // 从写文章页返回事件
-    backArticleList(isAdd) {
-      this.isShow.editor = 0
-
-      if (isAdd) {
-        this.getList()
-      }
     },
     // 删除文章
     delArticleHandler(id) {
