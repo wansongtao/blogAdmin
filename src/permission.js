@@ -1,4 +1,4 @@
-import router, { resetRouter } from './router'
+import router from './router'
 import store from './store'
 import NProgress from 'nprogress' // 进度条
 import 'nprogress/nprogress.css'
@@ -9,7 +9,7 @@ NProgress.configure({ showSpinner: false })
 const whiteList = ['/login', '/404'] // 白名单
 
 // 路由守卫
-router.beforeEach(async(to, from, next) => {
+router.beforeEach((to, from, next) => {
   // 开始进度条
   NProgress.start()
 
@@ -25,27 +25,27 @@ router.beforeEach(async(to, from, next) => {
       next({ path: '/' })
     } else {
       const hasGetUserInfo = store.getters.name
+
       if (hasGetUserInfo) {
         // 如果有用户名，则直接放行
         next()
       } else {
         try {
           // 获取用户信息
-          await store.dispatch('user/getInfo')
+          store.dispatch('user/getInfo').then(() => {
+            store.getters.routes.forEach((item) => {
+              router.addRoute(item)
+            })
 
-          resetRouter()
-
-          store.getters.routes.forEach((item) => {
-            router.addRoute(item)
+            // bug：next放行后，不会立即跳转到对应的页面而是会再跑一遍路由守卫，会造成重复跳转的问题
+            next({ ...to, replace: true }) // hack方法 确保addRoute已完成
           })
-
-          next()
         } catch (error) {
           // 清除token
-          await store.dispatch('user/resetToken')
-
-          // 重定向到登录页面，并加上请求字符串记录用户是从哪个页面跳转到登录页的方便登录后跳转到对应的页面
-          next(`/login?redirect=${to.path}`)
+          store.dispatch('user/resetToken').then(() => {
+            // 重定向到登录页面，并加上请求字符串记录用户是从哪个页面跳转到登录页的方便登录后跳转到对应的页面
+            next(`/login?redirect=${to.path}`)
+          })
         }
       }
     }
