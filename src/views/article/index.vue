@@ -55,25 +55,12 @@
 
     <!-- 编辑器，写文章页面 -->
     <Editor v-if="isShow.editor === 1" @click="backArticleList" />
-
-    <!-- 文章内容页 -->
-    <el-card v-if="isShow.editor === 2">
-      <div class="title">
-        <span>文章详情</span>
-        <el-divider content-position="right">你有成为大师的潜质</el-divider>
-      </div>
-      <div class="article-details">
-        <h4>{{ articleData[selectedIndex].articleTitle }}</h4>
-        <div class="content" v-html="articleContent" />
-      </div>
-      <div class="back-btn" @click="isShow.editor = 0">返回</div>
-    </el-card>
   </div>
 </template>
 
 <script>
 import Editor from './components/VueEditor'
-import { getArticleList, getArticleContent, delArticle } from '@/api/article'
+import { getArticleList, delArticle } from '@/api/article'
 
 export default {
   components: {
@@ -84,7 +71,7 @@ export default {
       articleData: [],
       count: 0,
       isShow: {
-        editor: 0 // 0文章列表，1添加文章，2查看文章
+        editor: 0 // 0文章列表，1添加文章
       },
       selectedIndex: -1,
       articleContent: '',
@@ -117,14 +104,11 @@ export default {
     // 查看文章内容
     getArticleContent(index) {
       this.selectedIndex = index
-      this.isShow.editor = 2
 
       const id = this.articleData[index].articleId
+      const title = this.articleData[index].articleTitle
 
-      // 获取文章内容
-      getArticleContent({ id }).then(data => {
-        this.articleContent = data.articleContent
-      })
+      this.$router.push(`/article/details/${id}/${title}`)
     },
     // 改变每页显示条数
     handleSizeChange(pageSize) {
@@ -199,47 +183,6 @@ export default {
   background: #f4b194;
   cursor: pointer;
   box-shadow: 0 0 5px 4px #eee;
-}
-
-.article-details {
-  background: #c7edcc;
-  overflow: auto;
-
-  h4 {
-    font-size: 24px;
-    line-height: 50px;
-    text-align: center;
-  }
-
-  .content {
-    overflow: auto;
-    padding: 10px;
-    height: 600px;
-    border-radius: 5px;
-
-    &::-webkit-scrollbar {
-      width: 8px;
-      background: #eed1ac;
-      border-radius: 4px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: #91cfca;
-      border-radius: 4px;
-    }
-
-    ::v-deep p {
-      font-size: 16px;
-      line-height: 30px;
-      text-indent: 2em;
-    }
-
-    ::v-deep h6 {
-      font-size: 18px;
-      line-height: 30px;
-      text-align: center;
-    }
-  }
 }
 
 .back-btn {
