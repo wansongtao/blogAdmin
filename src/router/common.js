@@ -22,10 +22,11 @@ const commonRoutes = [
         meta: { title: '添加文章' }
       },
       {
-        path: 'details',
+        path: 'details/:id/:title',
         name: 'ArticleDetails',
         component: () => import('@/views/article/details'),
         meta: { title: '文章详情' },
+        props: true,
         hidden: true
       }
     ]
