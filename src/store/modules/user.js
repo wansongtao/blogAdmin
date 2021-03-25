@@ -90,13 +90,14 @@ const actions = {
       getUserInfo().then(data => {
         const {
           name,
-          avatar
+          avatar,
+          roles
         } = data
 
         // 修改state里的name和avatar
         commit('SET_NAME', name)
         commit('SET_AVATAR', process.env.VUE_APP_BASE_API + avatar)
-        commit('SET_ROUTES', 'sAdmin')
+        commit('SET_ROUTES', roles)
         sessionStorage.users = JSON.stringify(data)
         resolve(data)
       }).catch(error => {
