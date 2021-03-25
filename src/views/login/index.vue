@@ -100,16 +100,7 @@ export default {
         ]
       },
       loading: false,
-      passwordType: 'password',
-      redirect: undefined
-    }
-  },
-  watch: {
-    $route: {
-      handler: function(route) {
-        this.redirect = route.query && route.query.redirect
-      },
-      immediate: true
+      passwordType: 'password'
     }
   },
   methods: {
@@ -133,8 +124,8 @@ export default {
           this.$store
             .dispatch('user/login', this.loginForm)
             .then(() => {
-              // 跳转到上次退出时的页面，没有则进入首页
-              this.$router.push({ path: this.redirect || '/' })
+              // 跳转到首页
+              this.$router.push('/')
               this.loading = false
             })
             .catch(() => {
