@@ -154,30 +154,6 @@ export default {
   height: 50px;
 }
 
-.add-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: 5%;
-  width: 100px;
-  height: 40px;
-  background: #f4b194;
-  cursor: pointer;
-  box-shadow: 0 0 5px 4px #eee;
-}
-
-.back-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 10px;
-  width: 100px;
-  height: 40px;
-  background: #c7edcc;
-  cursor: pointer;
-  box-shadow: 0 0 5px 4px #eee;
-}
-
 ::v-deep .el-card {
   overflow: auto;
   height: calc(100vh - 90px);
