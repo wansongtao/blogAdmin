@@ -96,7 +96,7 @@ const actions = {
         // 修改state里的name和avatar
         commit('SET_NAME', name)
         commit('SET_AVATAR', process.env.VUE_APP_BASE_API + avatar)
-        commit('SET_ROUTES', 'common')
+        commit('SET_ROUTES', 'sAdmin')
         sessionStorage.users = JSON.stringify(data)
         resolve(data)
       }).catch(error => {

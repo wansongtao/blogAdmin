@@ -1,5 +1,5 @@
 <template>
-  <div class="container">用户列表</div>
+  <div class="container">文章详情</div>
 </template>
 
 <script>
