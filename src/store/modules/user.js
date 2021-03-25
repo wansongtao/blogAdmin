@@ -41,11 +41,14 @@ const mutations = {
   SET_ROUTES: (state, roles) => {
     let routes = []
 
-    if (roles === 'common') {
+    if (roles === 10003) {
+      // 普通用户
       routes = commonRoutes
-    } else if (roles === 'admin') {
+    } else if (roles === 10002) {
+      // 管理员
       routes = adminRoutes
-    } else if (roles === 'sAdmin') {
+    } else if (roles === 10001) {
+      // 超级管理员
       routes = sAdminRoutes
     } else {
       routes = [{ path: '*', redirect: '/404', hidden: true }]
@@ -91,13 +94,13 @@ const actions = {
         const {
           name,
           avatar,
-          roles
+          roleId
         } = data
 
         // 修改state里的name和avatar
         commit('SET_NAME', name)
         commit('SET_AVATAR', process.env.VUE_APP_BASE_API + avatar)
-        commit('SET_ROUTES', roles)
+        commit('SET_ROUTES', roleId)
         sessionStorage.users = JSON.stringify(data)
         resolve(data)
       }).catch(error => {
