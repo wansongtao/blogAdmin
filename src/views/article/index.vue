@@ -64,7 +64,6 @@ export default {
       articleData: [],
       count: 0,
       selectedIndex: -1,
-      articleContent: '',
       search: {
         currentPage: 1,
         pageSize: 10

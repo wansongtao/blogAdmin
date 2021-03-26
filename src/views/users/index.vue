@@ -6,7 +6,7 @@
         <el-divider content-position="right">大梦一场空</el-divider>
       </div>
       <el-table
-        :data="articleData"
+        :data="userList"
         border
         stripe
         style="margin: 30px auto; width: 90%; "
@@ -14,28 +14,28 @@
         <el-table-column
           fixed
           align="center"
-          prop="articleId"
-          label="文章编号"
+          prop="userAccount"
+          label="用户账号"
         />
         <el-table-column
           fixed
           align="center"
-          prop="articleTitle"
-          label="文章标题"
+          prop="userName"
+          label="用户名"
         />
-        <el-table-column fixed align="center" prop="ADDACC" label="添加人" />
-        <el-table-column fixed align="center" prop="ADDTIME" label="添加时间" />
+        <el-table-column fixed align="center" prop="userGender" label="用户性别" />
+        <el-table-column fixed align="center" prop="powerName" label="用户权限" />
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
             <el-button
               size="mini"
-              @click="getArticleContent(scope.$index)"
+              @click="resetPwd(scope.row.userAccount)"
             >重置密码</el-button>
             <el-button
               size="mini"
               type="danger"
-              @click="delArticleHandler(scope.row.articleId)"
-            >删除</el-button>
+              @click="delArticleHandler(scope.row.userAccount)"
+            >删除用户</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -55,15 +55,14 @@
 </template>
 
 <script>
-import { getArticleList, delArticle } from '@/api/article'
+import { getUserList } from '@/api/user'
 
 export default {
   data() {
     return {
-      articleData: [],
+      userList: [],
       count: 0,
       selectedIndex: -1,
-      articleContent: '',
       search: {
         currentPage: 1,
         pageSize: 10
@@ -71,33 +70,23 @@ export default {
     }
   },
   created() {
-    // 获取文章列表
+    // 获取用户列表
     this.getList()
   },
   methods: {
     /**
-     * @description 获取文章列表
+     * @description 获取用户列表
      */
     getList() {
-      getArticleList(this.search).then((data) => {
-        this.articleData = data.articles.map(item => {
+      getUserList(this.search).then((data) => {
+        this.userList = data.userList.map((item) => {
           return {
             ...item,
-            ADDTIME: item.ADDTIME.replace(/T|Z/g, ' ').substr(0, 19)
+            userGender: item.userGender === '1' ? '男' : '女'
           }
         })
-
         this.count = data.count
       })
-    },
-    // 查看文章内容
-    getArticleContent(index) {
-      this.selectedIndex = index
-
-      const id = this.articleData[index].articleId
-      const title = this.articleData[index].articleTitle
-
-      this.$router.push(`/article/details/${id}/${title}`)
     },
     // 改变每页显示条数
     handleSizeChange(pageSize) {
@@ -110,20 +99,20 @@ export default {
       this.search.currentPage = currentPage
       this.getList()
     },
-    // 删除文章
-    delArticleHandler(id) {
+    // 重置密码
+    resetPwd(userAccount) {
+
+    },
+    // 删除用户
+    delArticleHandler(userAccount) {
       this.$confirm('此操作将永久删除该用户, 是否删除?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        delArticle({ id }).then(() => {
-          this.getList()
-
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
         })
       }).catch(() => {
         this.$message({

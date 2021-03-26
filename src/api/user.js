@@ -29,3 +29,11 @@ export function editUserInfo(data) {
     data
   })
 }
+
+export function getUserList(params) {
+  return request({
+    url: '/admin/getuserlist',
+    method: 'get',
+    params
+  })
+}
