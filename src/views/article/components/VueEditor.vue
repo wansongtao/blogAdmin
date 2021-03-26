@@ -294,7 +294,6 @@ export default {
 
       const data = {
         articleTitle: this.title,
-        articleImgUrl: this.avatar,
         articleContent: this.content,
         categoryId: this.selectCategory
       }
