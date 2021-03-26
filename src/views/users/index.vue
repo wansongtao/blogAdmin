@@ -5,6 +5,7 @@
         <span>用户列表</span>
         <el-divider content-position="right">大梦一场空</el-divider>
       </div>
+      <div style="margin-left: 5%;"><el-button type="primary" @click="openDialog">添加用户</el-button></div>
       <el-table
         :data="userList"
         border
@@ -53,14 +54,76 @@
         />
       </div>
     </el-card>
+
+    <el-dialog
+      title="添加用户"
+      :visible.sync="dialogVisible"
+      width="40%"
+      center
+    >
+      <el-form ref="form" :model="form" :rules="editRules" label-width="100px">
+        <el-form-item label="用户账号" prop="userAccount">
+          <el-input
+            ref="userAccount"
+            v-model="form.userAccount"
+            placeholder="请输入2-6位且以字母开头的账号"
+            name="userAccount"
+            type="text"
+            tabindex="1"
+          />
+        </el-form-item>
+        <el-form-item label="用户权限" prop="powerId">
+          <el-radio-group v-model="form.powerId">
+            <el-radio v-for="item in powerList" :key="item.powerId" :label="item.powerName" />
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="用户昵称" prop="userName">
+          <el-input
+            v-model="form.userName"
+            placeholder="请输入1-8位中文字符"
+            clearable
+          />
+        </el-form-item>
+        <el-form-item label="用户性别" prop="userGender">
+          <el-select v-model="form.userGender" placeholder="请选择性别">
+            <el-option label="男" value="1" />
+            <el-option label="女" value="0" />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" :loading="once.addbtn" @click="addUser">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { getUserList, delUser, resetUserPwd, getPowerList } from '@/api/user'
+import {
+  validateNickName,
+  validUsername
+} from '@/utils/validate'
 
 export default {
   data() {
+    const validateUsername = (rule, value, callback) => {
+      validUsername(value)
+        ? callback()
+        : callback(
+          new Error(
+            '请输入2-6位且以字母开头的账号，支持字母、数字、下划线组合'
+          )
+        )
+    }
+
+    const validateUserName = (rule, value, callback) => {
+      validateNickName(value)
+        ? callback()
+        : callback(new Error('请输入1-8位中文字符'))
+    }
+
     return {
       userList: [],
       count: 0,
@@ -68,18 +131,47 @@ export default {
         currentPage: 1,
         pageSize: 10
       },
+      powerList: [],
       once: {
         reset: false,
-        delbtn: false
+        delbtn: false,
+        addbtn: false
+      },
+      dialogVisible: false,
+      form: {
+        userAccount: '',
+        userName: '',
+        userGender: '0',
+        powerId: ''
+      },
+      editRules: {
+        userAccount: [
+          { required: true, trigger: 'blur', message: '账号不能为空' },
+          { trigger: 'blur', min: 2, max: 6, message: '账号长度2-6位' },
+          { trigger: 'blur', validator: validateUsername }
+        ],
+        powerId: [
+          { required: true, message: '请选择用户权限', trigger: 'change' }
+        ],
+        userName: [
+          { required: true, message: '请1-8位中文字符', trigger: 'blur' },
+          {
+            min: 1,
+            max: 8,
+            message: '长度在 1 到 8 个中文字符',
+            trigger: 'blur'
+          },
+          { trigger: 'blur', validator: validateUserName }
+        ],
+        userGender: [
+          { required: true, message: '请选择性别', trigger: 'change' }
+        ]
       }
     }
   },
   created() {
     // 获取用户列表
     this.getList()
-    getPowerList().then((data) => {
-      console.log(data)
-    })
   },
   methods: {
     /**
@@ -146,6 +238,27 @@ export default {
         })
         this.once.delbtn = false
       })
+    },
+    // 打开添加用户的弹窗
+    openDialog() {
+      this.dialogVisible = true
+
+      if (this.powerList.length === 0) {
+        // 获取权限列表
+        getPowerList().then((data) => {
+          this.powerList = data.powerList
+        })
+      }
+    },
+    addUser() {
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          // 开启登录加载
+          this.once.addbtn = true
+        }
+      })
+
+      // this.dialogVisible = false
     }
   }
 }
@@ -183,5 +296,11 @@ export default {
     background: #91cfca;
     border-radius: 4px;
   }
+}
+
+.dialog-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
 }
 </style>
