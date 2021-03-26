@@ -63,7 +63,6 @@ export default {
     return {
       articleData: [],
       count: 0,
-      selectedIndex: -1,
       search: {
         currentPage: 1,
         pageSize: 10
@@ -91,8 +90,6 @@ export default {
     },
     // 查看文章内容
     getArticleContent(index) {
-      this.selectedIndex = index
-
       const id = this.articleData[index].articleId
       const title = this.articleData[index].articleTitle
 

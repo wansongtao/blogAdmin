@@ -55,14 +55,13 @@
 </template>
 
 <script>
-import { getUserList } from '@/api/user'
+import { getUserList, delUser, resetUserPwd } from '@/api/user'
 
 export default {
   data() {
     return {
       userList: [],
       count: 0,
-      selectedIndex: -1,
       search: {
         currentPage: 1,
         pageSize: 10
@@ -101,7 +100,12 @@ export default {
     },
     // 重置密码
     resetPwd(userAccount) {
-
+      resetUserPwd({ userAccount }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '重置密码成功!'
+        })
+      })
     },
     // 删除用户
     delArticleHandler(userAccount) {
@@ -110,9 +114,13 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
+        delUser({ userAccount }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+
+          this.getList()
         })
       }).catch(() => {
         this.$message({

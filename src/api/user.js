@@ -37,3 +37,19 @@ export function getUserList(params) {
     params
   })
 }
+
+export function delUser(data) {
+  return request({
+    url: '/admin/deluser',
+    method: 'post',
+    data
+  })
+}
+
+export function resetUserPwd(data) {
+  return request({
+    url: '/admin/resetuserpwd',
+    method: 'post',
+    data
+  })
+}
