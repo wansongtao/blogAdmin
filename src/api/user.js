@@ -53,3 +53,10 @@ export function resetUserPwd(data) {
     data
   })
 }
+
+export function getPowerList() {
+  return request({
+    url: '/admin/getpowerlist',
+    method: 'get'
+  })
+}

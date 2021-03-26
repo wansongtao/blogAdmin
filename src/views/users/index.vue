@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import { getUserList, delUser, resetUserPwd } from '@/api/user'
+import { getUserList, delUser, resetUserPwd, getPowerList } from '@/api/user'
 
 export default {
   data() {
@@ -71,6 +71,9 @@ export default {
   created() {
     // 获取用户列表
     this.getList()
+    getPowerList().then((data) => {
+      console.log(data)
+    })
   },
   methods: {
     /**
