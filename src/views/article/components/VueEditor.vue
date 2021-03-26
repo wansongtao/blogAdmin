@@ -298,10 +298,14 @@ export default {
         categoryId: this.selectCategory
       }
 
+      this.loading = true
       addArticle(data).then(() => {
         this.$message.success('添加成功')
 
         this.resetContent()
+        this.loading = false
+      }).catch(() => {
+        this.loading = false
       })
     },
     // 取消添加，清空内容

@@ -29,11 +29,13 @@
           <template slot-scope="scope">
             <el-button
               size="mini"
+              :loading="once.reset"
               @click="resetPwd(scope.row.userAccount)"
             >重置密码</el-button>
             <el-button
               size="mini"
               type="danger"
+              :loading="once.delbtn"
               @click="delArticleHandler(scope.row.userAccount)"
             >删除用户</el-button>
           </template>
@@ -65,6 +67,10 @@ export default {
       search: {
         currentPage: 1,
         pageSize: 10
+      },
+      once: {
+        reset: false,
+        delbtn: false
       }
     }
   },
@@ -103,15 +109,21 @@ export default {
     },
     // 重置密码
     resetPwd(userAccount) {
+      this.once.reset = true
       resetUserPwd({ userAccount }).then(() => {
         this.$message({
           type: 'success',
           message: '重置密码成功!'
         })
+        this.once.reset = false
+      }).catch(() => {
+        this.once.reset = false
       })
     },
     // 删除用户
     delArticleHandler(userAccount) {
+      this.once.delbtn = true
+
       this.$confirm('此操作将永久删除该用户, 是否删除?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -122,14 +134,17 @@ export default {
             type: 'success',
             message: '删除成功!'
           })
-
           this.getList()
+          this.once.delbtn = false
+        }).catch(() => {
+          this.once.delbtn = false
         })
       }).catch(() => {
         this.$message({
           type: 'info',
           message: '已取消删除'
         })
+        this.once.delbtn = false
       })
     }
   }

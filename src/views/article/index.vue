@@ -35,6 +35,7 @@
             <el-button
               size="mini"
               type="danger"
+              :loading="once.delBtn"
               @click="delArticleHandler(scope.row.articleId)"
             >删除</el-button>
           </template>
@@ -66,6 +67,9 @@ export default {
       search: {
         currentPage: 1,
         pageSize: 10
+      },
+      once: {
+        delBtn: false
       }
     }
   },
@@ -108,6 +112,8 @@ export default {
     },
     // 删除文章
     delArticleHandler(id) {
+      this.once.delBtn = true
+
       this.$confirm('此操作将永久删除该文章, 是否删除?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -120,12 +126,18 @@ export default {
             type: 'success',
             message: '删除成功!'
           })
+
+          this.once.delBtn = false
+        }).catch(() => {
+          this.once.delBtn = false
         })
       }).catch(() => {
         this.$message({
           type: 'info',
           message: '已取消删除'
         })
+
+        this.once.delBtn = false
       })
     }
   }

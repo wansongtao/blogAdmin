@@ -85,7 +85,7 @@ export default {
     return {
       loginForm: {
         userAccount: 'Sadmin',
-        userPassword: 'w1998.0529.love'
+        userPassword: 'w1Sadmin123'
       },
       loginRules: {
         userAccount: [
