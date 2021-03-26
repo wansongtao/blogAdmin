@@ -23,8 +23,9 @@
           prop="articleTitle"
           label="文章标题"
         />
-        <el-table-column fixed align="center" prop="ADDACC" label="添加人" />
-        <el-table-column fixed align="center" prop="ADDTIME" label="添加时间" />
+        <el-table-column fixed align="center" prop="author" label="作者" />
+        <el-table-column fixed align="center" prop="categoryType" label="分类" />
+        <el-table-column fixed align="center" prop="addtime" label="添加时间" />
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
             <el-button
