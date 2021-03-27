@@ -48,14 +48,14 @@
                 @click="changeArticleState(scope.row.articleId, 4)"
               >管理员可见</el-button>
               <el-button
-                v-if="scope.row.isdelete === ''"
+                v-if="scope.row.isdelete === '否'"
                 size="mini"
                 type="danger"
                 :loading="once.delBtn"
                 @click="delArticleHandler(scope.row.articleId)"
               >删除</el-button>
               <el-button
-                v-if="scope.row.isdelete === '已删除'"
+                v-if="scope.row.isdelete === '是'"
                 size="mini"
                 type="primary"
                 :loading="once.delBtn"
@@ -110,7 +110,7 @@ export default {
         this.articleData = data.articles.map((item) => {
           return {
             ...item,
-            isdelete: item.isdelete ? '已删除' : ''
+            isdelete: item.isdelete ? '是' : '否'
           }
         })
 
