@@ -5,12 +5,14 @@
         <span>用户列表</span>
         <el-divider content-position="right">大梦一场空</el-divider>
       </div>
-      <div style="margin-left: 5%;"><el-button type="primary" @click="openDialog">添加用户</el-button></div>
+      <div style="margin-left: 5%">
+        <el-button type="primary" @click="openDialog">添加用户</el-button>
+      </div>
       <el-table
         :data="userList"
         border
         stripe
-        style="margin: 30px auto; width: 90%; "
+        style="margin: 30px auto; width: 90%"
       >
         <el-table-column
           fixed
@@ -18,14 +20,19 @@
           prop="userAccount"
           label="用户账号"
         />
+        <el-table-column fixed align="center" prop="userName" label="用户名" />
         <el-table-column
           fixed
           align="center"
-          prop="userName"
-          label="用户名"
+          prop="userGender"
+          label="用户性别"
         />
-        <el-table-column fixed align="center" prop="userGender" label="用户性别" />
-        <el-table-column fixed align="center" prop="powerName" label="用户权限" />
+        <el-table-column
+          fixed
+          align="center"
+          prop="powerName"
+          label="用户权限"
+        />
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
             <el-button
@@ -73,9 +80,16 @@
           />
         </el-form-item>
         <el-form-item label="用户权限" prop="powerId">
-          <el-radio-group v-model="form.powerId">
-            <el-radio v-for="item in powerList" :key="item.powerId" :label="item.powerName" />
-          </el-radio-group>
+          <el-radio
+            v-for="item in powerList"
+            :key="item.powerId"
+            v-model="form.powerId"
+            :label="item.powerId"
+            border
+            size="medium"
+          >
+            {{ item.powerName }}
+          </el-radio>
         </el-form-item>
         <el-form-item label="用户昵称" prop="userName">
           <el-input
@@ -93,18 +107,25 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" :loading="once.addbtn" @click="addUser">确 定</el-button>
+        <el-button
+          type="primary"
+          :loading="once.addbtn"
+          @click="addUser"
+        >确 定</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { getUserList, delUser, resetUserPwd, getPowerList } from '@/api/user'
 import {
-  validateNickName,
-  validUsername
-} from '@/utils/validate'
+  getUserList,
+  delUser,
+  resetUserPwd,
+  getPowerList,
+  insertUser
+} from '@/api/user'
+import { validateNickName, validUsername } from '@/utils/validate'
 
 export default {
   data() {
@@ -206,23 +227,27 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(() => {
-        resetUserPwd({ userAccount }).then(() => {
+      })
+        .then(() => {
+          resetUserPwd({ userAccount })
+            .then(() => {
+              this.$message({
+                type: 'success',
+                message: '重置密码成功!'
+              })
+              this.once.reset = false
+            })
+            .catch(() => {
+              this.once.reset = false
+            })
+        })
+        .catch(() => {
           this.$message({
-            type: 'success',
-            message: '重置密码成功!'
+            type: 'info',
+            message: '已取消重置'
           })
           this.once.reset = false
-        }).catch(() => {
-          this.once.reset = false
         })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消重置'
-        })
-        this.once.reset = false
-      })
     },
     // 删除用户
     delArticleHandler(userAccount) {
@@ -232,24 +257,28 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(() => {
-        delUser({ userAccount }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
-          this.getList()
-          this.once.delbtn = false
-        }).catch(() => {
-          this.once.delbtn = false
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
-        this.once.delbtn = false
       })
+        .then(() => {
+          delUser({ userAccount })
+            .then(() => {
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              })
+              this.getList()
+              this.once.delbtn = false
+            })
+            .catch(() => {
+              this.once.delbtn = false
+            })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+          this.once.delbtn = false
+        })
     },
     // 打开添加用户的弹窗
     openDialog() {
@@ -267,10 +296,22 @@ export default {
         if (valid) {
           // 开启登录加载
           this.once.addbtn = true
+
+          insertUser(this.form)
+            .then(() => {
+              this.$message({
+                type: 'success',
+                message: '添加成功!'
+              })
+              this.getList()
+              this.once.addbtn = false
+              this.dialogVisible = false
+            })
+            .catch(() => {
+              this.once.addbtn = false
+            })
         }
       })
-
-      // this.dialogVisible = false
     }
   }
 }

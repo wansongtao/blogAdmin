@@ -91,15 +91,15 @@ const actions = {
   }) {
     return new Promise((resolve, reject) => {
       getUserInfo().then(data => {
-        const {
-          name,
-          avatar,
-          roleId
-        } = data
+        const { name, avatar, roleId } = data
 
         // 修改state里的name和avatar
         commit('SET_NAME', name)
-        commit('SET_AVATAR', process.env.VUE_APP_BASE_API + avatar)
+
+        if (avatar !== 'null') {
+          commit('SET_AVATAR', process.env.VUE_APP_BASE_API + avatar)
+        }
+
         commit('SET_ROUTES', roleId)
         sessionStorage.users = JSON.stringify(data)
         resolve(data)

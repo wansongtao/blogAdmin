@@ -60,3 +60,11 @@ export function getPowerList() {
     method: 'get'
   })
 }
+
+export function insertUser(data) {
+  return request({
+    url: '/admin/adduser',
+    method: 'post',
+    data
+  })
+}
