@@ -38,3 +38,27 @@ export function delArticle(params) {
     params
   })
 }
+
+export function getAllArticle(params) {
+  return request({
+    url: '/admin/allarticle',
+    method: 'get',
+    params
+  })
+}
+
+export function checkArticleState(data) {
+  return request({
+    url: '/admin/checkarticle',
+    method: 'post',
+    data
+  })
+}
+
+export function reductionArticle(params) {
+  return request({
+    url: '/admin/reduction',
+    method: 'get',
+    params
+  })
+}

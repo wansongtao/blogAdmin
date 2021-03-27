@@ -83,11 +83,7 @@ export default {
      */
     getList() {
       getArticleList(this.search).then((data) => {
-        this.articleData = data.articles.map(item => {
-          return {
-            ...item
-          }
-        })
+        this.articleData = data.articles
 
         this.count = data.count
       })
