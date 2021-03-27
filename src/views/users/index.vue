@@ -202,13 +202,25 @@ export default {
     // 重置密码
     resetPwd(userAccount) {
       this.once.reset = true
-      resetUserPwd({ userAccount }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '重置密码成功!'
+      this.$confirm('确定重置密码?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        resetUserPwd({ userAccount }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '重置密码成功!'
+          })
+          this.once.reset = false
+        }).catch(() => {
+          this.once.reset = false
         })
-        this.once.reset = false
       }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消重置'
+        })
         this.once.reset = false
       })
     },
