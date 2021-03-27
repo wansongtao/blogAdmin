@@ -68,3 +68,11 @@ export function insertUser(data) {
     data
   })
 }
+
+export function updateUserPwd(data) {
+  return request({
+    url: '/admin/updatepwd',
+    method: 'post',
+    data
+  })
+}

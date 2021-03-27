@@ -1,7 +1,12 @@
 <template>
   <div class="dashboard-container">
     <el-card :body-style="{ height: '60px', padding: '10px' }">
-      <img src="~@/assets/common/indextop1.gif" alt="欢迎图片" class="topimg">
+      <img
+        src="~@/assets/common/indextop1.gif"
+        alt="欢迎图片"
+        class="topimg"
+        @click="dialogVisible = true"
+      >
       <p class="title">{{ title + name + "，祝您开心每一天！" }}</p>
     </el-card>
     <main>
@@ -19,17 +24,83 @@
         </el-card>
       </div>
     </main>
+
+    <el-dialog
+      title="修改密码"
+      :visible.sync="dialogVisible"
+      width="40%"
+      center
+    >
+      <el-form ref="form" :model="form" :rules="editRules" label-width="100px">
+        <el-form-item prop="oldPassword" label="原密码">
+          <el-input
+            key="passwordType1"
+            v-model="form.oldPassword"
+            show-password
+            placeholder="请输入6-16且以字母开头的旧密码"
+            name="oldPassword"
+          />
+        </el-form-item>
+        <el-form-item prop="newPassword" label="新密码">
+          <el-input
+            key="passwordType2"
+            v-model="form.newPassword"
+            show-password
+            placeholder="请输入6-16且以字母开头的新密码"
+            name="newPassword"
+            @keyup.enter.native="updatePwd"
+          />
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button
+          type="primary"
+          :loading="loading"
+          @click="updatePwd"
+        >确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import { validPassword } from '@/utils/validate'
+import { updateUserPwd } from '@/api/user'
 
 export default {
   name: 'Dashboard',
   data() {
+    const validatePassword = (rule, value, callback) => {
+      validPassword(value)
+        ? callback()
+        : callback(
+          new Error(
+            '请输入6-16且以字母开头的密码，支持字母、数字、下划线、英文的.?!'
+          )
+        )
+    }
     return {
-      value: new Date()
+      value: new Date(),
+      dialogVisible: false,
+      loading: false,
+      form: {
+        oldPassword: '',
+        newPassword: ''
+      },
+      editRules: {
+        oldPassword: [
+          { required: true, trigger: 'blur', message: '密码不能为空' },
+          { trigger: 'blur', min: 6, max: 16, message: '密码长度6-16位' },
+          { trigger: 'blur', validator: validatePassword }
+        ],
+        newPassword: [
+          { required: true, trigger: 'blur', message: '密码不能为空' },
+          { trigger: 'blur', min: 6, max: 16, message: '密码长度6-16位' },
+          { trigger: 'blur', validator: validatePassword }
+        ]
+      }
     }
   },
   computed: {
@@ -58,6 +129,28 @@ export default {
 
       return title
     }
+  },
+  methods: {
+    // 修改密码
+    updatePwd() {
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          this.loading = true
+
+          updateUserPwd(this.form).then(() => {
+            this.$message({
+              type: 'success',
+              message: '修改成功!'
+            })
+
+            this.dialogVisible = false
+            this.loading = false
+          }).catch(() => {
+            this.loading = false
+          })
+        }
+      })
+    }
   }
 }
 </script>
@@ -78,6 +171,7 @@ export default {
   width: 60px;
   height: 60px;
   border-radius: 10px;
+  cursor: pointer;
 }
 
 .title {
