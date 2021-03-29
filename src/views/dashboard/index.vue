@@ -19,7 +19,9 @@
         <el-card>
           <h4>待处理事项</h4>
           <div class="process">
-            <p>不过是大梦一场空，不过是孤影照惊鸿</p>
+            <p v-if="pendingArticle == false && pendingComment == false">不过是大梦一场空，不过是孤影照惊鸿</p>
+            <p v-if="pendingArticle">1.您还有<strong>{{ pendingArticle }}</strong>篇文章未审核。</p>
+            <p v-if="pendingComment">2.您还有<strong>{{ pendingComment }}</strong>条评论未审核。</p>
           </div>
         </el-card>
       </div>
@@ -100,7 +102,9 @@ export default {
           { trigger: 'blur', min: 6, max: 16, message: '密码长度6-16位' },
           { trigger: 'blur', validator: validatePassword }
         ]
-      }
+      },
+      pendingArticle: 0,
+      pendingComment: 0
     }
   },
   computed: {
@@ -129,6 +133,12 @@ export default {
 
       return title
     }
+  },
+  created() {
+    const data = JSON.parse(sessionStorage.users)
+
+    this.pendingArticle = data.pendingArticle
+    this.pendingComment = data.pendingComment
   },
   methods: {
     // 修改密码
@@ -198,6 +208,20 @@ main {
       height: 53px;
       line-height: 53px;
       border-bottom: 1px solid #ebeef5;
+    }
+  }
+
+  .process {
+    padding: 10px;
+
+    p {
+      font-size: 24px;
+      line-height: 50px;
+
+      strong {
+        padding: 0 10px;
+        color: red;
+      }
     }
   }
 
