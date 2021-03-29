@@ -30,12 +30,6 @@
                 @click="getArticleContent(scope.$index)"
               >查看</el-button>
               <el-button
-                v-if="scope.row.stateDes !== '待审核'"
-                size="mini"
-                :loading="once.delBtn"
-                @click="changeArticleState(scope.row.articleId, 1)"
-              >待审核</el-button>
-              <el-button
                 v-if="scope.row.stateDes !== '仅后台用户可见'"
                 size="mini"
                 :loading="once.delBtn"
