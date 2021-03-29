@@ -7,3 +7,19 @@ export function getAllCommentList(params) {
     params
   })
 }
+
+export function delComment(params) {
+  return request({
+    url: '/admin/delcomment',
+    method: 'get',
+    params
+  })
+}
+
+export function checkComment(data) {
+  return request({
+    url: '/admin/checkcomment',
+    method: 'post',
+    data
+  })
+}

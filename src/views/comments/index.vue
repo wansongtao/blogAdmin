@@ -47,20 +47,20 @@
             <template v-if="scope.row.stateDes === '待审核'">
               <el-button
                 size="mini"
-                :loading="once.reset"
-                @click="passComment(scope.row.commentId)"
+                :loading="onceBtn"
+                @click="checkCommentHandler(scope.row.commentId, 2)"
               >通过</el-button>
               <el-button
                 size="mini"
-                :loading="once.reset"
-                @click="noPassComment(scope.row.commentId)"
+                :loading="onceBtn"
+                @click="checkCommentHandler(scope.row.commentId, 3)"
               >不通过</el-button>
             </template>
             <el-button
               size="mini"
               type="danger"
-              :loading="once.delbtn"
-              @click="delArticleHandler(scope.row.commentId)"
+              :loading="onceBtn"
+              @click="delCommentHandler(scope.row.commentId)"
             >删除</el-button>
           </template>
         </el-table-column>
@@ -81,7 +81,7 @@
 </template>
 
 <script>
-import { getAllCommentList } from '@/api/comment'
+import { getAllCommentList, checkComment, delComment } from '@/api/comment'
 
 export default {
   data() {
@@ -92,10 +92,7 @@ export default {
         currentPage: 1,
         pageSize: 10
       },
-      once: {
-        reset: false,
-        delbtn: false
-      }
+      onceBtn: false
     }
   },
   created() {
@@ -123,25 +120,41 @@ export default {
       this.search.currentPage = currentPage
       this.getList()
     },
-    passComment(commentId) {
+    // 评论审核
+    checkCommentHandler(commentId, stateId) {
+      this.onceBtn = true
+      checkComment({ commentId, stateId }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '审核成功!'
+        })
 
+        this.onceBtn = false
+        this.getList()
+      }).catch(() => {
+        this.onceBtn = false
+      })
     },
-    noPassComment(commentId) {
-
-    },
-    // 删除用户
-    delArticleHandler(commentId) {
-      this.once.delbtn = true
-
-      this.$confirm('此操作将永久删除该用户, 是否删除?', '提示', {
+    // 删除评论
+    delCommentHandler(commentId) {
+      this.$confirm('此操作将永久删除该评论, 是否删除?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
         .then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
+          this.onceBtn = true
+
+          delComment({ commentId }).then(() => {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+
+            this.onceBtn = false
+            this.getList()
+          }).catch(() => {
+            this.onceBtn = false
           })
         })
         .catch(() => {
@@ -149,7 +162,6 @@ export default {
             type: 'info',
             message: '已取消删除'
           })
-          this.once.delbtn = false
         })
     }
   }
