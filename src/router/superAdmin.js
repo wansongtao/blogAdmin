@@ -80,7 +80,7 @@ const sAdminRoutes = [
       path: 'edit',
       component: () => import('@/views/category/index'),
       name: 'Edit',
-      meta: { title: '栏目管理', icon: 'edit' }
+      meta: { title: '分类管理', icon: 'edit' }
     }]
   },
   { path: '*', redirect: '/404', hidden: true }

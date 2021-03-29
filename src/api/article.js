@@ -62,3 +62,26 @@ export function reductionArticle(params) {
     params
   })
 }
+
+export function updateCategoryName(params) {
+  return request({
+    url: '/admin/updatecategory',
+    method: 'get',
+    params
+  })
+}
+
+export function addCategory(data) {
+  return request({
+    url: '/admin/addcategory',
+    method: 'post',
+    data
+  })
+}
+
+export function delCategory(categoryId) {
+  return request({
+    url: `/admin/delcategory?categoryId=${categoryId}`,
+    method: 'get'
+  })
+}
