@@ -36,6 +36,12 @@
                 @click="changeArticleState(scope.row.articleId, 1)"
               >待审核</el-button>
               <el-button
+                v-if="scope.row.stateDes !== '仅后台用户可见'"
+                size="mini"
+                :loading="once.delBtn"
+                @click="changeArticleState(scope.row.articleId, 2)"
+              >后台用户可见</el-button>
+              <el-button
                 v-if="scope.row.stateDes !== '所有用户可见'"
                 size="mini"
                 :loading="once.delBtn"
