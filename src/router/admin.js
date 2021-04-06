@@ -46,7 +46,7 @@ const adminRoutes = [
         path: 'check',
         component: () => import('@/views/comments/index'),
         name: 'Check',
-        meta: { title: '评论审核', icon: 'message' }
+        meta: { title: '评论管理', icon: 'message' }
       }
     ]
   },
@@ -59,7 +59,7 @@ const adminRoutes = [
         path: 'check',
         component: () => import('@/views/message/index'),
         name: 'CheckMessage',
-        meta: { title: '留言审核', icon: 'message' }
+        meta: { title: '留言管理', icon: 'message' }
       }
     ]
   },

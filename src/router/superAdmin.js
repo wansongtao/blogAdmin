@@ -81,7 +81,7 @@ const sAdminRoutes = [
         path: 'check',
         component: () => import('@/views/message/index'),
         name: 'CheckMessage',
-        meta: { title: '留言审核', icon: 'message' }
+        meta: { title: '留言管理', icon: 'message' }
       }
     ]
   },
