@@ -50,6 +50,19 @@ const adminRoutes = [
       }
     ]
   },
+  {
+    path: '/message',
+    name: 'Message',
+    component: Layout,
+    children: [
+      {
+        path: 'check',
+        component: () => import('@/views/message/index'),
+        name: 'CheckMessage',
+        meta: { title: '留言审核', icon: 'message' }
+      }
+    ]
+  },
   { path: '*', redirect: '/404', hidden: true }
 ]
 

@@ -73,6 +73,19 @@ const sAdminRoutes = [
     ]
   },
   {
+    path: '/message',
+    name: 'Message',
+    component: Layout,
+    children: [
+      {
+        path: 'check',
+        component: () => import('@/views/message/index'),
+        name: 'CheckMessage',
+        meta: { title: '留言审核', icon: 'message' }
+      }
+    ]
+  },
+  {
     path: '/category',
     name: 'Category',
     component: Layout,
