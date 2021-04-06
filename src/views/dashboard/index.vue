@@ -19,9 +19,10 @@
         <el-card>
           <h4>待处理事项</h4>
           <div class="process">
-            <p v-if="pendingArticle == false && pendingComment == false">不过是大梦一场空，不过是孤影照惊鸿</p>
+            <p v-if="pendingArticle && pendingComment && pendingMsg">不过是大梦一场空，不过是孤影照惊鸿</p>
             <p v-if="pendingArticle">您还有<strong>{{ pendingArticle }}</strong>篇文章未审核。</p>
             <p v-if="pendingComment">您还有<strong>{{ pendingComment }}</strong>条评论未审核。</p>
+            <p v-if="pendingMsg">您还有<strong>{{ pendingMsg }}</strong>条留言未审核。</p>
           </div>
         </el-card>
       </div>
@@ -104,7 +105,8 @@ export default {
         ]
       },
       pendingArticle: 0,
-      pendingComment: 0
+      pendingComment: 0,
+      pendingMsg: 0
     }
   },
   computed: {
@@ -138,6 +140,7 @@ export default {
     this.$store.dispatch('user/getInfo').then((data) => {
       this.pendingArticle = data.pendingArticle || 0
       this.pendingComment = data.pendingComment || 0
+      this.pendingMsg = data.pendingMsg || 0
     })
   },
   methods: {
