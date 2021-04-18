@@ -76,18 +76,6 @@ export default {
       border-radius: 4px;
     }
 
-    // ::v-deep p {
-    //   font-size: 16px;
-    //   line-height: 30px;
-    //   text-indent: 2em;
-    // }
-
-    // ::v-deep h6 {
-    //   font-size: 18px;
-    //   line-height: 30px;
-    //   text-align: center;
-    // }
-
     ::v-deep p {
       text-indent: 2em;
       text-align: left;
@@ -112,12 +100,32 @@ export default {
       text-align: center;
     }
 
-    ::v-deep h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
+    ::v-deep h1 {
+      text-align: center;
+      line-height: 1.6em;
+    }
+
+    ::v-deep h2 {
+      text-align: center;
+      line-height: 1.6em;
+    }
+
+    ::v-deep h3 {
+      text-align: center;
+      line-height: 1.6em;
+    }
+
+    ::v-deep h4 {
+      text-align: center;
+      line-height: 1.6em;
+    }
+
+    ::v-deep h5 {
+      text-align: center;
+      line-height: 1.6em;
+    }
+
+    ::v-deep h6 {
       text-align: center;
       line-height: 1.6em;
     }
