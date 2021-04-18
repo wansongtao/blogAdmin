@@ -33,7 +33,7 @@ export default {
     }
   },
   created() {
-    getArticleContent({ id: Number(this.id) }).then(data => {
+    getArticleContent({ id: Number(this.id) }).then((data) => {
       this.articleContent = data.articleContent
     })
   }
@@ -76,16 +76,50 @@ export default {
       border-radius: 4px;
     }
 
+    // ::v-deep p {
+    //   font-size: 16px;
+    //   line-height: 30px;
+    //   text-indent: 2em;
+    // }
+
+    // ::v-deep h6 {
+    //   font-size: 18px;
+    //   line-height: 30px;
+    //   text-align: center;
+    // }
+
     ::v-deep p {
-      font-size: 16px;
-      line-height: 30px;
       text-indent: 2em;
+      text-align: left;
+      line-height: 2em;
     }
 
-    ::v-deep h6 {
-      font-size: 18px;
-      line-height: 30px;
+    ::v-deep img {
+      display: block;
+      margin: 10px auto;
+      max-width: 100%;
+    }
+
+    ::v-deep pre {
+      padding: 0 10px;
+      text-align: left;
+      line-height: 2em;
+      background: #eee;
+      overflow-x: auto;
+    }
+
+    ::blockquote {
       text-align: center;
+    }
+
+    ::v-deep h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      text-align: center;
+      line-height: 1.6em;
     }
   }
 }
