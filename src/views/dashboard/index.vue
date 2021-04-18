@@ -19,7 +19,7 @@
         <el-card>
           <h4>待处理事项</h4>
           <div class="process">
-            <p v-if="pendingArticle && pendingComment && pendingMsg">不过是大梦一场空，不过是孤影照惊鸿</p>
+            <p v-if="!pendingArticle && !pendingComment && !pendingMsg">您没有任何事项需要处理。</p>
             <p v-if="pendingArticle">您还有<strong>{{ pendingArticle }}</strong>篇文章未审核。</p>
             <p v-if="pendingComment">您还有<strong>{{ pendingComment }}</strong>条评论未审核。</p>
             <p v-if="pendingMsg">您还有<strong>{{ pendingMsg }}</strong>条留言未审核。</p>
