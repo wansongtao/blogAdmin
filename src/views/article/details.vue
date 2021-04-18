@@ -108,7 +108,7 @@ export default {
       overflow-x: auto;
     }
 
-    ::blockquote {
+    ::v-deep blockquote {
       text-align: center;
     }
 
