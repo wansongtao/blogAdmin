@@ -336,8 +336,8 @@ export default {
       updateArticle(data).then(() => {
         this.$message.success('修改成功')
 
-        this.resetContent()
         this.loading = false
+        this.resetContent()
       }).catch(() => {
         this.loading = false
       })
