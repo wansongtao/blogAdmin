@@ -9,6 +9,9 @@
         <h4>{{ title }}</h4>
         <div class="content" v-html="articleContent" />
       </div>
+      <div class="btn">
+        <el-button type="primary" round @click="$router.back()">返回</el-button>
+      </div>
     </el-card>
   </div>
 </template>
@@ -62,7 +65,7 @@ export default {
   .content {
     overflow: auto;
     padding: 10px;
-    height: calc(100vh - 330px);
+    height: calc(100vh - 360px);
     border-radius: 5px;
 
     &::-webkit-scrollbar {
@@ -130,8 +133,11 @@ export default {
       line-height: 1.6em;
     }
   }
-}
 
+}
+  .btn {
+    padding: 10px 0;
+  }
 ::v-deep .el-card {
   overflow: auto;
   height: calc(100vh - 90px);
