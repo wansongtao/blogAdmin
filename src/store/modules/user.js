@@ -18,6 +18,7 @@ const getDefaultState = () => {
     token: getToken(),
     name: '',
     avatar: '',
+    roleId: '',
     routes: []
   }
 }
@@ -55,6 +56,7 @@ const mutations = {
     }
 
     state.routes = routes
+    state.roleId = roles
   }
 }
 

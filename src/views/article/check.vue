@@ -48,14 +48,14 @@
                 @click="changeArticleState(scope.row.articleId, 4)"
               >管理员可见</el-button>
               <el-button
-                v-if="scope.row.isdelete === '否'"
+                v-if="scope.row.isdelete === '否' && $store.state.user.roleId === 10001"
                 size="mini"
                 type="danger"
                 :loading="once.delBtn"
                 @click="delArticleHandler(scope.row.articleId)"
               >删除</el-button>
               <el-button
-                v-if="scope.row.isdelete === '是'"
+                v-if="scope.row.isdelete === '是' && $store.state.user.roleId === 10001"
                 size="mini"
                 type="primary"
                 :loading="once.delBtn"
