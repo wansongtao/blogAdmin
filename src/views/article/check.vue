@@ -24,7 +24,7 @@
         <el-table-column align="center" prop="isdelete" label="是否已删除" />
         <el-table-column align="center" label="操作" min-width="240">
           <template slot-scope="scope">
-            <div class="btn-list">
+            <div v-if="scope.row.isdelete === '否' || $store.state.user.roleId === 10001" class="btn-list">
               <el-button
                 size="mini"
                 @click="getArticleContent(scope.$index)"
@@ -62,6 +62,7 @@
                 @click="reduction(scope.row.articleId)"
               >恢复</el-button>
             </div>
+            <span v-if="scope.row.isdelete === '是' && $store.state.user.roleId !== 10001">已删除</span>
           </template>
         </el-table-column>
       </el-table>
