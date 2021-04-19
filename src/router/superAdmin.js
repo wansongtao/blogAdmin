@@ -55,6 +55,14 @@ const sAdminRoutes = [
         meta: { title: '文章详情' },
         props: true,
         hidden: true
+      },
+      {
+        path: 'update/:id/:title/:category',
+        name: 'ArticleUpdate',
+        component: () => import('@/views/article/update'),
+        meta: { title: '修改文章' },
+        props: true,
+        hidden: true
       }
     ]
   },
