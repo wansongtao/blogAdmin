@@ -71,7 +71,7 @@ import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 
-import { getCategory, getArticleContent } from '@/api/article'
+import { getCategory, getArticleContent, updateArticle } from '@/api/article'
 
 // 工具栏配置
 const toolbarOptions = [
@@ -197,7 +197,7 @@ export default {
   },
   data() {
     return {
-      id: this.$route.query.id,
+      id: Number(this.$route.query.id),
       articleTitle: this.$route.query.title,
       categories: [{ categoryId: 101, categoryType: '错了' }],
       selectCategory: '',
@@ -222,7 +222,12 @@ export default {
           }
         }
       },
-      loading: false
+      loading: false,
+      oldData: {
+        articleTitle: this.$route.query.title,
+        selectCategory: '',
+        content: ''
+      }
     }
   },
   created() {
@@ -234,10 +239,13 @@ export default {
       // 选中当前文章所属分类
       const index = data.categories.findIndex((item) => item.categoryType === category)
       this.selectCategory = index !== -1 ? data.categories[index].categoryId : data.categories[0].categoryId
+
+      this.oldData.selectCategory = this.selectCategory
     })
 
     getArticleContent({ id: Number(this.id) }).then((data) => {
       this.content = data.articleContent
+      this.oldData.content = this.content
     })
   },
   methods: {
@@ -292,7 +300,7 @@ export default {
     },
     // 确定修改文章
     submitArticle() {
-      if (this.title.length === 0 || this.title.length > 50) {
+      if (this.articleTitle.length === 0 || this.articleTitle.length > 50) {
         this.$message.error('请输入1-50位字符的文章标题')
         return false
       } else if (!this.content.length) {
@@ -300,27 +308,46 @@ export default {
         return false
       }
 
-      // const data = {
-      //   articleTitle: this.title,
-      //   articleContent: this.content,
-      //   categoryId: this.selectCategory
-      // }
+      if (this.articleTitle === this.oldData.articleTitle && this.content === this.oldData.content && this.selectCategory === this.oldData.selectCategory) {
+        this.$message({
+          type: 'warning',
+          message: '您没有修改任何内容'
+        })
+        return false
+      }
+
+      const data = {
+        articleId: this.id
+      }
+
+      if (this.articleTitle !== this.oldData.articleTitle) {
+        data.articleTitle = this.articleTitle
+      }
+
+      if (this.content !== this.oldData.content) {
+        data.articleContent = this.content
+      }
+
+      if (this.selectCategory !== this.oldData.selectCategory) {
+        data.categoryId = this.selectCategory
+      }
 
       this.loading = true
-      // addArticle(data).then(() => {
-      //   this.$message.success('添加成功')
+      updateArticle(data).then(() => {
+        this.$message.success('修改成功')
 
-      //   this.resetContent()
-      //   this.loading = false
-      // }).catch(() => {
-      //   this.loading = false
-      // })
+        this.resetContent()
+        this.loading = false
+      }).catch(() => {
+        this.loading = false
+      })
     },
     // 取消添加，清空内容
     resetContent() {
       this.title = ''
       this.selectCategory = this.categories[0].categoryId
       this.content = ''
+      this.$router.back()
     }
   }
 }
