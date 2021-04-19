@@ -9,7 +9,7 @@
         :data="articleData"
         border
         stripe
-        style="margin: 30px auto; width: 90%; "
+        style="margin: 30px auto; width: 90%"
       >
         <el-table-column
           fixed
@@ -24,7 +24,12 @@
           label="文章标题"
         />
         <el-table-column fixed align="center" prop="author" label="作者" />
-        <el-table-column fixed align="center" prop="categoryType" label="分类" />
+        <el-table-column
+          fixed
+          align="center"
+          prop="categoryType"
+          label="分类"
+        />
         <el-table-column fixed align="center" prop="addtime" label="添加时间" />
         <el-table-column align="center" label="操作">
           <template slot-scope="scope">
@@ -32,6 +37,11 @@
               size="mini"
               @click="getArticleContent(scope.$index)"
             >查看</el-button>
+            <el-button
+              size="mini"
+              type="warning"
+              @click="updateArticle(scope.$index)"
+            >修改</el-button>
             <el-button
               size="mini"
               type="danger"
@@ -114,26 +124,44 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(() => {
-        delArticle({ id }).then(() => {
-          this.getList()
+      })
+        .then(() => {
+          delArticle({ id })
+            .then(() => {
+              this.getList()
 
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              })
+
+              this.once.delBtn = false
+            })
+            .catch(() => {
+              this.once.delBtn = false
+            })
+        })
+        .catch(() => {
           this.$message({
-            type: 'success',
-            message: '删除成功!'
+            type: 'info',
+            message: '已取消删除'
           })
 
           this.once.delBtn = false
-        }).catch(() => {
-          this.once.delBtn = false
         })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
+    },
+    updateArticle(index) {
+      const id = this.articleData[index].articleId
+      const title = this.articleData[index].articleTitle
+      const category = this.articleData[index].categoryType
 
-        this.once.delBtn = false
+      this.$router.push({
+        path: '/article/update',
+        query: {
+          id,
+          title,
+          category
+        }
       })
     }
   }
