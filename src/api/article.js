@@ -85,3 +85,11 @@ export function delCategory(categoryId) {
     method: 'get'
   })
 }
+
+export function updateArticle(data) {
+  return request({
+    url: '/admin/updatearticle',
+    method: 'post',
+    data
+  })
+}
