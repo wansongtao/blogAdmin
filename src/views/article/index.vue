@@ -38,6 +38,7 @@
               @click="getArticleContent(scope.$index)"
             >查看</el-button>
             <el-button
+              v-if="$store.getters.name === scope.row.author"
               size="mini"
               type="warning"
               @click="updateArticle(scope.$index)"
