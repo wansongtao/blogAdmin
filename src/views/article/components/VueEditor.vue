@@ -187,7 +187,7 @@ const toolbarOptions = [
   [{ direction: 'rtl' }], // 文本方向  2
   [{ align: [] }], // 对齐方式 2
   ['clean'], // 清除文本格式
-  ['link', 'image', 'video'] // 链接、图片、视频
+  ['image'] // 链接、图片、视频
 ]
 
 export default {
