@@ -5,6 +5,20 @@
         <span>文章列表</span>
         <el-divider content-position="right">大梦一场空</el-divider>
       </div>
+      <div class="search">
+        <div class="search-input">
+          <el-input
+            v-model="search.keyword"
+            placeholder="请输入标题、时间、作者搜索文章"
+            prefix-icon="el-icon-search"
+            clearable
+            maxlength="50"
+          />
+        </div>
+        <div class="search-btn">
+          <el-button type="primary" :loading="loading" icon="el-icon-search" @click="searchArticle">搜索</el-button>
+        </div>
+      </div>
       <el-table
         :data="articleData"
         border
@@ -68,7 +82,7 @@
 </template>
 
 <script>
-import { getArticleList, delArticle } from '@/api/article'
+import { getArticleList, delArticle, searchArticleList } from '@/api/article'
 
 export default {
   data() {
@@ -77,11 +91,13 @@ export default {
       count: 0,
       search: {
         currentPage: 1,
-        pageSize: 10
+        pageSize: 10,
+        keyword: ''
       },
       once: {
         delBtn: false
-      }
+      },
+      loading: false
     }
   },
   created() {
@@ -110,12 +126,21 @@ export default {
     handleSizeChange(pageSize) {
       this.search.pageSize = pageSize
 
-      this.getList()
+      if (this.search.keyword === '') {
+        this.getList()
+      } else {
+        this.searchArticle()
+      }
     },
     // 改变页码
     handleCurrentChange(currentPage) {
       this.search.currentPage = currentPage
-      this.getList()
+
+      if (this.search.keyword === '') {
+        this.getList()
+      } else {
+        this.searchArticle()
+      }
     },
     // 删除文章
     delArticleHandler(id) {
@@ -164,6 +189,40 @@ export default {
           category
         }
       })
+    },
+    searchArticle() {
+      if (this.search.keyword === '') {
+        this.$message({
+          type: 'warning',
+          message: '请输入搜素内容!'
+        })
+        return
+      }
+
+      if (this.loading) {
+        this.$message({
+          type: 'warning',
+          message: '正在努力搜索中...'
+        })
+      }
+
+      this.loading = true
+      searchArticleList(this.search).then((data) => {
+        if (data) {
+          this.articleData = data.articles
+
+          this.count = data.count
+        } else {
+          this.$message({
+            type: 'warning',
+            message: '未搜索到任何相关文章!'
+          })
+        }
+
+        this.loading = false
+      }).catch(() => {
+        this.loading = false
+      })
     }
   }
 }
@@ -175,6 +234,22 @@ export default {
 
   span {
     font-size: 24px;
+  }
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  margin: 0 auto;
+  width: 90%;
+
+  .search-input {
+    width: 30%;
+  }
+
+  .search-btn {
+    margin-left: 20px;
+    width: 100px;
   }
 }
 
