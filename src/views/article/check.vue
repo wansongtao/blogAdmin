@@ -5,6 +5,20 @@
         <span>文章审核列表</span>
         <el-divider content-position="right">大梦一场空</el-divider>
       </div>
+      <div class="search">
+        <div class="search-input">
+          <el-input
+            v-model="search.keyword"
+            placeholder="请输入标题、时间、作者搜索文章"
+            prefix-icon="el-icon-search"
+            clearable
+            maxlength="50"
+          />
+        </div>
+        <div class="search-btn">
+          <el-button type="primary" :loading="loading" icon="el-icon-search" @click="searchArticle">搜索</el-button>
+        </div>
+      </div>
       <el-table
         :data="articleData"
         border
@@ -91,11 +105,13 @@ export default {
       count: 0,
       search: {
         currentPage: 1,
-        pageSize: 10
+        pageSize: 10,
+        keyword: ''
       },
       once: {
         delBtn: false
-      }
+      },
+      loading: false
     }
   },
   created() {
@@ -108,14 +124,25 @@ export default {
      */
     getList() {
       getAllArticle(this.search).then((data) => {
-        this.articleData = data.articles.map((item) => {
-          return {
-            ...item,
-            isdelete: item.isdelete ? '是' : '否'
-          }
-        })
+        if (data.count) {
+          this.articleData = data.articles.map((item) => {
+            return {
+              ...item,
+              isdelete: item.isdelete ? '是' : '否'
+            }
+          })
 
-        this.count = data.count
+          this.count = data.count
+        } else {
+          this.$message({
+            type: 'warning',
+            message: '未搜索到任何相关文章!'
+          })
+        }
+
+        this.loading = false
+      }).catch(() => {
+        this.loading = false
       })
     },
     // 改变每页显示条数
@@ -231,6 +258,25 @@ export default {
 
           this.once.delBtn = false
         })
+    },
+    searchArticle() {
+      // if (this.search.keyword === '') {
+      //   this.$message({
+      //     type: 'warning',
+      //     message: '请输入搜素内容!'
+      //   })
+      //   return
+      // }
+
+      if (this.loading) {
+        this.$message({
+          type: 'warning',
+          message: '正在努力搜索中...'
+        })
+      }
+
+      this.loading = true
+      this.getList()
     }
   }
 }
@@ -242,6 +288,22 @@ export default {
 
   span {
     font-size: 24px;
+  }
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  margin: 0 auto;
+  width: 90%;
+
+  .search-input {
+    width: 30%;
+  }
+
+  .search-btn {
+    margin-left: 20px;
+    width: 100px;
   }
 }
 

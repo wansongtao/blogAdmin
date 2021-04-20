@@ -82,7 +82,7 @@
 </template>
 
 <script>
-import { getArticleList, delArticle, searchArticleList } from '@/api/article'
+import { getArticleList, delArticle } from '@/api/article'
 
 export default {
   data() {
@@ -110,9 +110,20 @@ export default {
      */
     getList() {
       getArticleList(this.search).then((data) => {
-        this.articleData = data.articles
+        if (data.count) {
+          this.articleData = data.articles
 
-        this.count = data.count
+          this.count = data.count
+        } else {
+          this.$message({
+            type: 'warning',
+            message: '未搜索到任何相关文章!'
+          })
+        }
+
+        this.loading = false
+      }).catch(() => {
+        this.loading = false
       })
     },
     // 查看文章内容
@@ -126,21 +137,13 @@ export default {
     handleSizeChange(pageSize) {
       this.search.pageSize = pageSize
 
-      if (this.search.keyword === '') {
-        this.getList()
-      } else {
-        this.searchArticle()
-      }
+      this.getList()
     },
     // 改变页码
     handleCurrentChange(currentPage) {
       this.search.currentPage = currentPage
 
-      if (this.search.keyword === '') {
-        this.getList()
-      } else {
-        this.searchArticle()
-      }
+      this.getList()
     },
     // 删除文章
     delArticleHandler(id) {
@@ -191,13 +194,13 @@ export default {
       })
     },
     searchArticle() {
-      if (this.search.keyword === '') {
-        this.$message({
-          type: 'warning',
-          message: '请输入搜素内容!'
-        })
-        return
-      }
+      // if (this.search.keyword === '') {
+      //   this.$message({
+      //     type: 'warning',
+      //     message: '请输入搜素内容!'
+      //   })
+      //   return
+      // }
 
       if (this.loading) {
         this.$message({
@@ -207,22 +210,7 @@ export default {
       }
 
       this.loading = true
-      searchArticleList(this.search).then((data) => {
-        if (data) {
-          this.articleData = data.articles
-
-          this.count = data.count
-        } else {
-          this.$message({
-            type: 'warning',
-            message: '未搜索到任何相关文章!'
-          })
-        }
-
-        this.loading = false
-      }).catch(() => {
-        this.loading = false
-      })
+      this.getList()
     }
   }
 }

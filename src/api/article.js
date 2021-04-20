@@ -93,11 +93,3 @@ export function updateArticle(data) {
     data
   })
 }
-
-export function searchArticleList(params) {
-  return request({
-    url: '/admin/searcharticle',
-    method: 'get',
-    params
-  })
-}
