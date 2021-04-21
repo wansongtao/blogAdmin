@@ -71,6 +71,7 @@
 import { mapGetters } from 'vuex'
 import { validPassword } from '@/utils/validate'
 import { updateUserPwd } from '@/api/user'
+import CryptoJS from 'crypto-js'
 
 export default {
   name: 'Dashboard',
@@ -150,7 +151,10 @@ export default {
         if (valid) {
           this.loading = true
 
-          updateUserPwd(this.form).then(() => {
+          const key = CryptoJS.MD5(this.form.oldPassword).toString()
+          const data = CryptoJS.AES.encrypt(JSON.stringify(this.form), key).toString()
+
+          updateUserPwd({ pwd: data }).then(() => {
             this.$message({
               type: 'success',
               message: '修改成功!'
