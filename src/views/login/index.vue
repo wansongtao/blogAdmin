@@ -60,6 +60,7 @@
 
 <script>
 import { validUsername, validPassword } from '@/utils/validate'
+import CryptoJS from 'crypto-js'
 
 export default {
   name: 'Login',
@@ -120,9 +121,14 @@ export default {
           // 开启登录加载
           this.loading = true
 
+          const data = {
+            userAccount: this.loginForm.userAccount,
+            userPassword: CryptoJS.MD5(this.loginForm.userPassword).toString()
+          }
+
           // 调用vuex里user模块里的异步方法（action里的login）
           this.$store
-            .dispatch('user/login', this.loginForm)
+            .dispatch('user/login', data)
             .then(() => {
               // 跳转到首页
               this.$router.push('/')

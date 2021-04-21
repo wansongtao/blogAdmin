@@ -65,16 +65,9 @@ const actions = {
   login({
     commit
   }, userInfo) {
-    const {
-      userAccount,
-      userPassword
-    } = userInfo
     return new Promise((resolve, reject) => {
       // 调用api/user里的login方法
-      login({
-        userAccount: userAccount.trim(),
-        userPassword: userPassword.trim()
-      }).then(data => {
+      login(userInfo).then(data => {
         // 调用mutations里的SET_TOKEN方法将token存入state中
         commit('SET_TOKEN', data.token)
 
